@@ -1,0 +1,322 @@
+city,xco2_ppm,sif_757nm,country,TargetRegion,population,gdp_bil_usd,annual_co2_em_mtco2,number_of_sams,quadrant
+Abidjan,,0.32192993,,,,,,,LOW_both
+Abu Dhabi,416.77133,0.065345764,,,,,,,LOW_both
+Accra,,0.21807957,,,,,,,LOW_both
+Ad Damman,415.3122,0.021976471,,,,,,,LOW_both
+Addis Ababa,,0.10318661,,,,,,,LOW_both
+Adelaide,413.96646,0.1633997,,,,,,,LOW_both
+Adelaide River,412.99377,0.19375229,,,,,,,LOW_both
+Agra,413.16956,0.15729666,,,,,,,LOW_both
+Ahmedabad,417.52103,0.20462179,,,,,,,LOW_both
+Ahvaz,413.89633,0.08382416,,,,,,,LOW_both
+Al Ahmadi,417.0145,0.022236824,,,,,,,LOW_both
+Al Ayn,416.69348,0.04645443,,,,,,,LOW_both
+Al Hufuf,416.01614,0.026752949,,,,,,,LOW_both
+Alice,413.964,0.14413166,,,,,,,LOW_both
+Alice Springs,413.60992,0.041538715,,,,,,,LOW_both
+Allahabad,416.1583,0.1945467,,,,,,,LOW_both
+Almaty,416.25687,0.11643982,,,,,,,LOW_both
+Amman,415.20715,0.062067986,Jordan,South and West Asia,3628653,49,15.658,11,LOW_both
+Amsterdam,417.323,0.4888878,,,,,,,LOW_both
+Ankara,415.7333,0.11182499,,,,,,,LOW_both
+Ansan,421.01428,0.15768242,,,,,,,LOW_emissions_HIGH_conc
+Aosta,410.6583,0.09694481,,,,,,,LOW_both
+Ashburton,411.80872,0.3304124,,,,,,,LOW_both
+Ashgabat,415.74927,0.06464481,,,,,,,LOW_both
+Astana,416.51938,0.09349251,,,,,,,LOW_both
+Athens,415.94562,0.11630297,Greece,Europe,3344006,168.7,22.004,2,LOW_both
+Atlanta,416.93216,0.24246025,,,,,,,LOW_both
+Auckland,412.50464,0.24598026,,,,,,,LOW_both
+Aurora,416.5079,0.081570625,,,,,,,LOW_both
+Austin,420.35394,0.23128223,,,,,,,LOW_emissions_HIGH_conc
+Az Zahran,415.77,0.019913673,,,,,,,LOW_both
+Baghdad,417.08032,0.10113144,,,,,,,LOW_both
+Ballarat,413.17212,0.21622276,,,,,,,LOW_both
+Baltimore,416.2595,0.3035493,,,,,,,LOW_both
+Baotou,418.1114,0.06874466,,,,,,,LOW_emissions_HIGH_conc
+Barcelona,418.07867,0.12339592,Spain,Europe,3617341,193.6,23.661,9,LOW_emissions_HIGH_conc
+Beer Sheva,415.4622,0.0668354,,,,,,,LOW_both
+Beijing,419.32343,0.16123629,,,,,,,LOW_emissions_HIGH_conc
+Bend,415.26788,0.113660336,,,,,,,LOW_both
+Bengaluru,417.42554,0.18061972,,,,,,,LOW_both
+Benha,416.17014,0.19122076,,,,,,,LOW_both
+Bhuj,417.79126,0.118656635,,,,,,,LOW_emissions_HIGH_conc
+Birmingham,416.39844,0.2841997,,,,,,,LOW_both
+Bloomington,417.5016,0.38927364,,,,,,,LOW_both
+Bogota,416.65347,0.2210741,,,,,,,LOW_both
+Boston,417.16803,0.25236988,USA,North America,2043464,240.7,27.917,7,LOW_both
+Boulder,414.75955,0.07578373,,,,,,,LOW_both
+Brisbane,415.1929,0.1766491,,,,,,,LOW_both
+Bristol,416.2409,0.38043022,,,,,,,LOW_both
+Brussels,415.36212,0.32322407,,,,,,,LOW_both
+Bryan,419.9159,0.22042274,,,,,,,LOW_emissions_HIGH_conc
+Bucharest,414.50693,0.24055624,,,,,,,LOW_both
+Budapest,416.6934,0.3079834,,,,,,,LOW_both
+Buenos Aires,412.54712,0.16853762,Argentina,Latin America,14671264,448.2,38.885,18,LOW_both
+Bursa,413.2395,0.19705915,,,,,,,LOW_both
+Busan,418.1606,0.21728468,,,,,,,LOW_emissions_HIGH_conc
+Caceres,415.33664,0.21736193,,,,,,,LOW_both
+Cairo,417.25925,0.11132717,,,,,,,LOW_both
+Calgary,415.8156,0.15099907,,,,,,,LOW_both
+Cape Town,413.643,0.11539459,South Africa,Africa,3922881,75.1,43.121,15,HIGH_emissions_LOW_conc
+Caracas,415.26443,0.27634525,,,,,,,LOW_both
+Chandigarh,415.01083,0.16684818,,,,,,,LOW_both
+Changchun,418.5368,0.14963579,,,,,,,LOW_emissions_HIGH_conc
+Charlotte,414.0166,0.32215977,,,,,,,LOW_both
+Charlottesville,414.62378,0.3687153,,,,,,,LOW_both
+Chengdu,417.11496,0.20179367,China,Central East Asia,10212401,291.8,15.893,3,LOW_both
+Chennai,418.61682,0.18850613,India,South and West Asia,10533570,182.6,11.382,1,LOW_emissions_HIGH_conc
+Chicago,418.281,0.20382833,USA,North America,3493266,308.7,25.168,4,LOW_emissions_HIGH_conc
+Chifeng,415.66693,0.096811295,,,,,,,LOW_both
+Chongqing,417.24207,0.24010754,,,,,,,LOW_both
+Christchurch,413.2843,0.30797386,,,,,,,LOW_both
+Chur,417.25153,0.12112093,,,,,,,LOW_both
+Clarksburg,415.7806,0.5356698,,,,,,,LOW_both
+Clarksville,415.2551,0.47007275,,,,,,,LOW_both
+Cleveland,416.15506,0.21063185,,,,,,,LOW_both
+Cologne,417.34296,0.29937744,,,,,,,LOW_both
+Colon,421.52252,0.37569904,,,,,,,LOW_emissions_HIGH_conc
+Columbus,415.29684,0.23919678,,,,,,,LOW_both
+Corvallis,416.11517,0.22289276,,,,,,,LOW_both
+Cottbus,414.75043,0.20148754,,,,,,,LOW_both
+Curitiba,,0.20696545,,,,,,,LOW_both
+Daegu,419.73334,0.23075199,,,,,,,LOW_emissions_HIGH_conc
+Daejeon,413.6604,0.21449757,,,,,,,LOW_both
+Dalian,418.43982,0.15922928,China,Central East Asia,3612937,118,26.507,4,LOW_emissions_HIGH_conc
+Dallas,414.95447,0.17115211,,,,,,,LOW_both
+Dar es Salaam,,0.1949234,,,,,,,LOW_both
+Datong,412.84738,0.1468749,,,,,,,LOW_both
+Denver,414.5819,0.10460949,,,,,,,LOW_both
+Dhaka,417.69852,0.22385597,Bangladesh,South and West Asia,29564652,391.9,21.763,1,LOW_emissions_HIGH_conc
+Doha,417.43082,0.034770966,,,,,,,LOW_both
+Dresden,414.11584,0.35463238,,,,,,,LOW_both
+Dubai,416.87827,0.058855534,UAE,South and West Asia,1986017,120.2,32.447,12,LOW_both
+Durban,414.0148,0.20874882,South Africa,Africa,3181031,62.8,35.579,7,LOW_both
+Eugene,415.50024,0.20086575,,,,,,,LOW_both
+Freeport,415.09558,0.31616783,,,,,,,LOW_both
+Freetown,,0.22106457,,,,,,,LOW_both
+Fresno,414.03534,0.121912956,,,,,,,LOW_both
+Fuzhou,417.82776,0.2813139,,,,,,,LOW_emissions_HIGH_conc
+Gillette,417.7834,0.09270239,,,,,,,LOW_emissions_HIGH_conc
+Guadalajara,416.02145,0.13068676,Mexico,Latin America,5047012,132.1,14.216,13,LOW_both
+Guangzhou,418.1676,0.17261982,,,,,,,LOW_emissions_HIGH_conc
+Guiyang,417.948,0.1713686,,,,,,,LOW_emissions_HIGH_conc
+Hamilton,414.47122,0.32553244,,,,,,,LOW_both
+Hangzhou,418.28168,0.19363117,China,Central East Asia,10466656,422.9,67.572,1,HIGH_both
+Hanoi,419.05515,0.24012089,Vietnam,East. Southeast Asia & Oceania,6937417,179.9,15.263,1,LOW_emissions_HIGH_conc
+Harbin,415.22687,0.13752556,,,,,,,LOW_both
+Ho Chi Minh City,417.73056,0.24282265,,,,,,,LOW_emissions_HIGH_conc
+Hong Kong,416.28537,0.21673965,,,,,,,LOW_both
+Houston,415.4816,0.25319386,USA,North America,5664644,480.1,37.065,1,LOW_both
+Huainan,419.01443,0.15115118,,,,,,,LOW_emissions_HIGH_conc
+Hyderabad,418.18582,0.17550135,,,,,,,LOW_emissions_HIGH_conc
+Indianapolis,417.13712,0.30744743,,,,,,,LOW_both
+Ironwood,412.92218,0.22350883,,,,,,,LOW_both
+Irvine,417.7121,0.106987,,,,,,,LOW_emissions_HIGH_conc
+Isfahan,417.87482,0.039902687,,,,,,,LOW_emissions_HIGH_conc
+Istanbul,416.35675,0.15718555,Turkey,Europe,15618958,989.5,28.253,2,LOW_both
+Jaipur,417.9193,0.11779213,,,,,,,LOW_emissions_HIGH_conc
+Jakarta,417.80273,0.20299625,,,,,,,LOW_emissions_HIGH_conc
+Jeddah,416.25604,0.03188944,,,,,,,LOW_both
+Jefferson City,412.3975,0.3807907,,,,,,,LOW_both
+Jiayuguan,,0.028107643,,,,,,,LOW_both
+Jinan,416.4066,0.22882605,,,,,,,LOW_both
+Jodhpur,417.6705,0.06969452,,,,,,,LOW_emissions_HIGH_conc
+Johannesburg,413.8574,0.13918686,South Africa,Africa,8238975,187.7,50.68,2,HIGH_emissions_LOW_conc
+John Day,415.88177,0.04101467,,,,,,,LOW_both
+Johnstown,415.0769,0.5002613,,,,,,,LOW_both
+Joliet,417.95767,0.25526476,,,,,,,LOW_emissions_HIGH_conc
+Kaiapoi,413.1505,0.26726532,,,,,,,LOW_both
+Kanpur,,0.17679167,,,,,,,LOW_both
+Kansas City,416.89172,0.28145504,,,,,,,LOW_both
+Kaohsiung,418.7676,0.2235198,,,,,,,LOW_emissions_HIGH_conc
+Karachi,414.7749,0.08719063,Pakistan,South and West Asia,11860354,139.6,20.402,9,LOW_both
+Katherine,414.58942,0.12684631,,,,,,,LOW_both
+Katowice,416.1353,0.2755432,,,,,,,LOW_both
+Khartoum,416.96942,0.04760647,,,,,,,LOW_both
+Kinshasa,,0.21300077,,,,,,,LOW_both
+Kolkata,415.67023,0.20257759,India,South and West Asia,21356228,188,46.824,6,HIGH_emissions_LOW_conc
+La Cruz,415.70306,0.26587677,,,,,,,LOW_both
+La Paz,,0.035583496,,,,,,,LOW_both
+Lagos,415.3169,0.2027235,,,,,,,LOW_both
+Lahore,415.8742,0.19614506,,,,,,,LOW_both
+Lakeville,413.5677,0.2989874,,,,,,,LOW_both
+Las Vegas,414.6137,0.067698,,,,,,,LOW_both
+Lawrence,417.25952,0.37080383,,,,,,,LOW_both
+Leeton,413.70682,0.1656537,,,,,,,LOW_both
+Lethem,414.4777,0.3477192,,,,,,,LOW_both
+Lewiston,416.2264,0.16481924,,,,,,,LOW_both
+Liberia,415.06207,0.268425,,,,,,,LOW_both
+Liege,416.88333,0.39908743,,,,,,,LOW_both
+Lima,414.85568,0.03851843,Peru,Latin America,10141408,241.1,35.05,9,LOW_both
+Lisbon,,0.1421938,,,,,,,LOW_both
+Lodz,415.5627,0.24034595,,,,,,,LOW_both
+London,417.5914,0.2612419,UK,Europe,11239995,970.1,22.388,2,LOW_emissions_HIGH_conc
+Los Alamos,416.10178,0.063913345,,,,,,,LOW_both
+Los Angeles,418.58826,0.09969139,USA,North America,6340910,604.2,45.97,22,HIGH_both
+Luanda,414.8247,0.12578869,,,,,,,LOW_both
+Lucknow,418.1535,0.18570137,,,,,,,LOW_emissions_HIGH_conc
+Ludhiana,414.40677,0.26855946,,,,,,,LOW_both
+Macon,417.3448,0.35113525,,,,,,,LOW_both
+Madison,414.23956,0.20665646,,,,,,,LOW_both
+Madrid,416.30087,0.106980324,Spain,Europe,4584179,272.8,16.955,22,LOW_both
+Maebashi,415.05243,0.20330143,,,,,,,LOW_both
+Makkah,416.7514,0.03392172,,,,,,,LOW_both
+Manaus,420.83966,0.338974,,,,,,,LOW_emissions_HIGH_conc
+Manhattan,415.78748,0.23733473,,,,,,,LOW_both
+Manila,418.60846,0.28685665,,,,,,,LOW_emissions_HIGH_conc
+Maracaibo,416.14062,0.23069096,,,,,,,LOW_both
+Marietta,415.92786,0.27236986,,,,,,,LOW_both
+Marseille,414.2356,0.18470669,,,,,,,LOW_both
+Mashhad,415.4248,0.04156828,,,,,,,LOW_both
+McMinns Lagoon,411.29913,0.16238928,,,,,,,LOW_both
+Medellin,419.9941,0.26872396,,,,,,,LOW_emissions_HIGH_conc
+Medina,416.31165,0.022228241,,,,,,,LOW_both
+Melbourne,413.20105,0.16319895,Australia,East. Southeast Asia & Oceania,4060542,257.2,45.11,3,HIGH_emissions_LOW_conc
+Melun,416.21564,0.39827538,,,,,,,LOW_both
+Memphis,415.45493,0.18315601,,,,,,,LOW_both
+Mexico City,417.56714,0.10206747,Mexico,Latin America,14142563,409.2,18.945,27,LOW_both
+Miami,416.75244,0.1654892,USA,North America,5704554,438.2,33.174,4,LOW_both
+Middelburg,415.17828,0.08592987,,,,,,,LOW_both
+Milan,416.2068,0.30294704,Italy,Europe,4337831,341.8,24.551,11,LOW_both
+Minneapolis,413.71173,0.28805447,,,,,,,LOW_both
+Miri,420.79053,0.39275742,,,,,,,LOW_emissions_HIGH_conc
+Monterrey,418.28418,0.117750645,,,,,,,LOW_emissions_HIGH_conc
+Montpelier,418.3764,0.56352234,,,,,,,LOW_emissions_HIGH_conc
+Montreal,417.42944,0.18524742,Canada,North America,3380758,197.9,32.459,9,LOW_both
+Mumbai,415.98224,0.12613869,India,South and West Asia,19043780,414.4,50.657,8,HIGH_emissions_LOW_conc
+Munich,417.7338,0.3382311,,,,,,,LOW_emissions_HIGH_conc
+Nagoya,418.6462,0.15576267,,,,,,,LOW_emissions_HIGH_conc
+Nairobi,416.98956,0.15399837,Kenya,Africa,5277515,83.1,35.622,11,LOW_both
+Namur,415.29245,0.3217144,,,,,,,LOW_both
+Nanjing,416.3186,0.23627758,,,,,,,LOW_both
+Naples,415.135,0.22251797,,,,,,,LOW_both
+New Delhi,415.92105,0.14062405,India,South and West Asia,23182754,537.3,34.329,14,LOW_both
+New Orleans,416.84717,0.22055054,,,,,,,LOW_both
+New York,416.22794,0.2693081,USA,North America,10658557,1132,44.632,3,HIGH_emissions_LOW_conc
+Newcastle Waters,414.09473,0.06068325,,,,,,,LOW_both
+Niagara Falls,414.34143,0.37641335,,,,,,,LOW_both
+Niamey,415.59546,0.060262203,,,,,,,LOW_both
+Ningbo,417.69272,0.20937538,,,,,,,LOW_emissions_HIGH_conc
+Norman,412.07715,0.23233604,,,,,,,LOW_both
+Odessa,408.4854,0.03864765,,,,,,,LOW_both
+Omaha,417.97037,0.15402126,,,,,,,LOW_emissions_HIGH_conc
+Orlando,416.91626,0.21816492,,,,,,,LOW_both
+Oruro,,0.009506702,,,,,,,LOW_both
+Osaka,416.6356,0.20231533,,,,,,,LOW_both
+Ostrava,414.86383,0.286654,,,,,,,LOW_both
+Oxford,416.30118,0.3549347,,,,,,,LOW_both
+Palm Springs,413.21866,0.074142456,,,,,,,LOW_both
+Paris,417.45154,0.24236679,France,Europe,10055230,959.4,41.297,5,HIGH_emissions_LOW_conc
+Patna,419.73795,0.17867756,,,,,,,LOW_emissions_HIGH_conc
+Perth,413.6421,0.1376934,,,,,,,LOW_both
+Peshawar,417.95428,0.12836409,,,,,,,LOW_emissions_HIGH_conc
+Petoskey,413.8525,0.27434635,,,,,,,LOW_both
+Philadelphia,415.8771,0.19830847,USA,North America,2832734,231.8,14.023,2,LOW_both
+Phoenix,417.99753,0.07494736,USA,North America,2756881,198.8,25.137,19,LOW_emissions_HIGH_conc
+Pine Creek,413.08075,0.12701416,,,,,,,LOW_both
+Pittsburgh,415.31516,0.4050479,,,,,,,LOW_both
+Ponca City,415.25516,0.20838976,,,,,,,LOW_both
+Ponce,421.16812,0.36514473,,,,,,,LOW_emissions_HIGH_conc
+Portland,416.00677,0.2157135,USA,North America,1927072,160,25.21,16,LOW_both
+Prague,414.43152,0.27174854,,,,,,,LOW_both
+Probolinggo,417.60092,0.3012123,,,,,,,LOW_emissions_HIGH_conc
+Pueblo,417.60718,0.06560993,,,,,,,LOW_emissions_HIGH_conc
+Pune,413.98547,0.1407795,,,,,,,LOW_both
+Putian,418.4699,0.2433877,,,,,,,LOW_emissions_HIGH_conc
+Qingdao,419.46698,0.1077013,China,Central East Asia,3950398,178.6,35.115,5,LOW_emissions_HIGH_conc
+Quanzhou,419.73016,0.20818615,,,,,,,LOW_emissions_HIGH_conc
+Quesada,417.1247,0.3982935,,,,,,,LOW_both
+Quito,412.01956,0.20956993,,,,,,,LOW_both
+Reunion Island,411.38266,0.28477955,,,,,,,LOW_both
+Richland,416.54028,0.13345337,,,,,,,LOW_both
+Richmond,414.31976,0.17773724,,,,,,,LOW_both
+Rio de Janeiro,414.79837,0.24571991,Brazil,Latin America,10393317,225.7,39.012,7,LOW_both
+Riyadh,415.782,0.036598206,,,,,,,LOW_both
+Rockhampton,414.1192,0.15397215,,,,,,,LOW_both
+Rome,416.5857,0.204422,Italy,Europe,3440199,230.6,27.217,13,LOW_both
+Rostov,415.039,0.2718172,,,,,,,LOW_both
+Sacramento,417.22247,0.15176582,,,,,,,LOW_both
+Saint John,,0.13385296,,,,,,,LOW_both
+Salem,414.68732,0.2226181,,,,,,,LOW_both
+Salt Lake City,416.03433,0.10084438,,,,,,,LOW_both
+Salvador,,0.23445034,,,,,,,LOW_both
+Samut Prakan,420.04272,0.19166803,,,,,,,LOW_emissions_HIGH_conc
+San Antonio,418.44244,0.1776104,,,,,,,LOW_emissions_HIGH_conc
+San Cristobal,417.50696,0.3035388,,,,,,,LOW_both
+San Diego,415.94986,0.08542442,,,,,,,LOW_both
+San Francisco,417.2921,0.13077354,USA,North America,5809783,912.2,38.386,2,LOW_both
+San Jose,415.56158,0.13252068,,,,,,,LOW_both
+San Luis,413.6998,0.09135723,,,,,,,LOW_both
+Santa Cruz de Tenerife,,0.074150085,,,,,,,LOW_both
+Santa Fe,416.98254,0.034482956,,,,,,,LOW_both
+Santarem,419.65308,0.353652,,,,,,,LOW_emissions_HIGH_conc
+Santiago,413.94507,0.08001232,Chile,Latin America,6033643,182.4,23.359,8,LOW_both
+Sao Paulo,413.7756,0.17760658,Brazil,Latin America,18522262,542.5,35.053,9,LOW_both
+Seattle,416.49213,0.19172192,USA,North America,2126664,274.8,35.484,8,LOW_both
+Seoul,420.57892,0.17428732,South Korea,East. Southeast Asia & Oceania,11659102,557.7,79.024,11,HIGH_both
+Seremban,421.02316,0.3803997,,,,,,,LOW_emissions_HIGH_conc
+Shah Alam,417.2633,0.30092764,,,,,,,LOW_both
+Shanghai,418.86108,0.13839722,,,,,,,LOW_emissions_HIGH_conc
+Shangqiu,414.6222,0.23208094,,,,,,,LOW_both
+Shantou,417.99734,0.16051674,,,,,,,LOW_emissions_HIGH_conc
+Shenyang,416.09424,0.13318491,,,,,,,LOW_both
+Shijiazhuang,417.73157,0.17970324,,,,,,,LOW_emissions_HIGH_conc
+Singapore,415.99075,0.3396945,,,,,,,LOW_both
+Sinop,416.8465,0.2217722,,,,,,,LOW_both
+Socorro,415.37854,0.038184166,,,,,,,LOW_both
+Sohag,417.0307,0.09777975,,,,,,,LOW_both
+Spartanburg,419.6659,0.26824188,,,,,,,LOW_emissions_HIGH_conc
+Springs,415.6007,0.08521128,,,,,,,LOW_both
+St. Charles,418.2757,0.3005519,,,,,,,LOW_emissions_HIGH_conc
+St. Louis,417.65543,0.25193787,,,,,,,LOW_emissions_HIGH_conc
+St. Petersburg,418.23923,0.21928596,,,,,,,LOW_emissions_HIGH_conc
+Standerton,414.4284,0.085436344,,,,,,,LOW_both
+State College,414.18964,0.4565339,,,,,,,LOW_both
+Stockton,416.64014,0.20846367,,,,,,,LOW_both
+Sydney,412.9959,0.16712856,Australia,East. Southeast Asia & Oceania,4303199,290.9,21.249,3,LOW_both
+Tabriz,416.83948,0.054055214,,,,,,,LOW_both
+Taichung,419.08875,0.26189613,,,,,,,LOW_emissions_HIGH_conc
+Taipei,416.94592,0.30543852,,,,,,,LOW_both
+Taiyuan,418.5755,0.14711809,,,,,,,LOW_emissions_HIGH_conc
+Tarabulus,414.8612,0.13481712,,,,,,,LOW_both
+Tehran,416.3411,0.058309555,,,,,,,LOW_both
+Tel Aviv-Yafo,415.91736,0.134552,Israel,Europe,2167590,154.3,17.424,18,LOW_both
+Thames,412.8638,0.3576851,,,,,,,LOW_both
+Thies,,0.08308077,,,,,,,LOW_both
+Tianjin,419.6115,0.10384369,,,,,,,LOW_emissions_HIGH_conc
+Timmins,413.36295,0.19197178,,,,,,,LOW_both
+Tokyo,416.92282,0.13030434,Japan,East. Southeast Asia & Oceania,21604148,1224.7,83.384,1,HIGH_emissions_LOW_conc
+Toledo,412.28717,0.2866888,,,,,,,LOW_both
+Tomah,414.5731,0.29689217,,,,,,,LOW_both
+Tombstone,419.31818,0.038033485,,,,,,,LOW_emissions_HIGH_conc
+Toronto,414.87595,0.21576786,Canada,North America,3641203,254.2,11.7,6,LOW_both
+Traralgon,411.40784,0.32181644,,,,,,,LOW_both
+Trenton,416.0147,0.20277882,,,,,,,LOW_both
+Tucson,416.07202,0.07184601,,,,,,,LOW_both
+Tulare,413.54654,0.17958403,,,,,,,LOW_both
+Tumut,414.3943,0.15354443,,,,,,,LOW_both
+Ulsan,418.19308,0.21400404,,,,,,,LOW_emissions_HIGH_conc
+Urumqi,416.39447,0.05463934,,,,,,,LOW_both
+Uyuni,,0.045677185,,,,,,,LOW_both
+Vancouver,417.54916,0.17204666,Canada,North America,2234359,139.6,17.595,16,LOW_both
+Venice,408.06372,0.24705696,,,,,,,LOW_both
+Vienna,416.48935,0.28888702,,,,,,,LOW_both
+Voi,415.44403,0.10346556,,,,,,,LOW_both
+Waco,418.22998,0.20958519,,,,,,,LOW_emissions_HIGH_conc
+Warsaw,415.95807,0.21131134,,,,,,,LOW_both
+Washington DC,416.8028,0.32719946,USA,North America,4317937,446.8,39.655,6,HIGH_emissions_LOW_conc
+Wenzhou,414.37796,0.23460579,,,,,,,LOW_both
+Wheeling,414.84537,0.5222964,,,,,,,LOW_both
+Winnemucca,416.1069,0.027630806,,,,,,,LOW_both
+Worcester,416.7248,0.22559452,,,,,,,LOW_both
+Wuhan,418.79193,0.17336941,China,Central East Asia,7910273,330,54.696,4,HIGH_both
+Wuxi,419.5152,0.18785906,,,,,,,LOW_emissions_HIGH_conc
+Xiamen,418.5097,0.17580414,,,,,,,LOW_emissions_HIGH_conc
+Xian,417.8714,0.23953629,,,,,,,LOW_emissions_HIGH_conc
+Yeosu,417.15268,0.23113108,,,,,,,LOW_both
+Yinchuan,417.01184,0.092653275,,,,,,,LOW_both
+Zhengzhou,418.60602,0.23153114,,,,,,,LOW_emissions_HIGH_conc
+Zibo,416.31097,0.24469185,,,,,,,LOW_both
+Zug,414.35904,0.379951,,,,,,,LOW_both
+Zurich,414.45404,0.32464457,,,,,,,LOW_both
