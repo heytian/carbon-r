@@ -119,7 +119,7 @@ ggplot(norm_df, aes(x = reorder(quadrant, impact_iqr, median),
               width = 0.2, alpha = 0.8) +
   scale_color_viridis_c(
     name   = "Distance to\ncoast (km)",
-    option = "plasma"
+    option = "viridis"
   ) +
   scale_size_continuous(range = c(2, 6), name = "Population (M)") +
   labs(
@@ -155,7 +155,7 @@ ggplot(coef_df, aes(x = estimate, y = reorder(term, estimate))) +
   geom_errorbarh(aes(xmin = conf.low, xmax = conf.high), height = 0.2) +
   geom_point(aes(color = p.value < 0.20), size = 3) +
   scale_color_manual(
-    values = c("FALSE" = "gray70", "TRUE" = "steelblue"),
+    values = c("FALSE" = "gray70", "TRUE" = "red"),
     labels = c("p > 0.20", "p < 0.20")
   ) +
   labs(
