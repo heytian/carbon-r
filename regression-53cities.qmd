@@ -1,0 +1,193 @@
+---
+title: "Carbon Cities"
+format: 
+  html:
+    theme: cosmo
+    toc: true
+    code-fold: true
+editor: visual
+warning: false
+date: 04/05/2026
+date-format: long
+author: 
+ - name: He Yutian
+abstract: > 
+  A study of 53 C40 cities, as part of "Speculative Carbon Futures Amidst Climate Data Inequities (working title)"
+---
+
+## 
+
+## Regression
+
+A 'carbon impact score' is introduced by taking the normalized interquartile range of CO2 concentration levels (OCO-3 netcdf data) subtracted by CO2 emissions levels (satellite-based estimates from Ahn et al, 2025). This is then compared against solar induced fluorescence (SIF), population, gdp, number of samples, and coastal proximity via running a multivariate linear regression.
+
+```{r}
+# reference: https://towardsdatascience.com/7-steps-to-run-a-linear-regression-analysis-using-r-d5897a66b835/
+
+# install.packages("tidyverse")
+library(tidyverse)
+
+
+df <- read.csv("c40cities-co2-em-conc-wkt-coast.csv") # outcome of https://github.com/heytian/d2d-oco3-tools/blob/main/20260405_04_wkt-coastal.py
+df <- df |> drop_na(population)
+
+# normalize independent variables using interquartile range 
+iqr_norm <- function(x) {
+  q1 <- quantile(x, 0.25, na.rm = TRUE)
+  q3 <- quantile(x, 0.75, na.rm = TRUE)
+  (x - q1) / (q3 - q1)
+}
+
+
+norm_df <- df |> 
+  mutate(
+    co2_conc_iqr = iqr_norm(xco2_ppm),
+    co2_em_iqr = iqr_norm(annual_co2_em_mtco2),
+    sif_iqr = iqr_norm(sif_757nm),
+    pop_iqr = iqr_norm(population),
+    xco2numsams_iqr = iqr_norm(xco2_numsams),
+    sifnumsams_iqr = iqr_norm(sif_numsams),
+    gdp_iqr = iqr_norm(gdp_bil_usd),
+    coast_iqr = iqr_norm(coastal_km),
+    impact_iqr = co2_conc_iqr - co2_em_iqr
+  )
+    
+
+lm_iqr_impact<- lm(impact_iqr ~ sif_iqr + pop_iqr + xco2numsams_iqr + sifnumsams_iqr + gdp_iqr + coast_iqr, 
+                  data = norm_df)
+summary(lm_iqr_impact)
+```
+
+## Plots
+
+This is the distribution of cities across the quadrant framework of high-low CO2 concentrations and emissions.
+
+```{r}
+# bubble size = population, color = quadrant, shape = coastal/inland
+ggplot(norm_df, aes(x = co2_em_iqr, y = co2_conc_iqr)) +
+  
+  # quadrant dividing lines at IQR thresholds (0 = Q1, 1 = Q3)
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray60") +
+  geom_hline(yintercept = 1, linetype = "dashed", color = "gray60") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray60") +
+  geom_vline(xintercept = 1, linetype = "dashed", color = "gray60") +
+  
+  # cities as bubbles
+  geom_point(aes(
+    color = quadrant,
+    size  = population / 1e6, # size by population millions
+    shape = is_coastal
+  ), alpha = 0.75) +
+  
+  # label interesting cities only
+  ggrepel::geom_text_repel(
+    data = norm_df |> filter(
+      quadrant %in% c("LOW_emissions_HIGH_conc", "HIGH_emissions_LOW_conc")
+    ),
+    aes(label = city),
+    size = 2.8, max.overlaps = 15
+  ) +
+  
+  scale_color_manual(values = c(
+    "HIGH_both"              = "#d73027",
+    "LOW_both"               = "#4575b4",
+    "HIGH_emissions_LOW_conc" = "#fc8d59",
+    "LOW_emissions_HIGH_conc" = "#91bfdb")) +
+  scale_shape_manual(values = c("True" = 17, "False" = 16),
+                     labels = c("True" = "Coastal", "False" = "Inland")) +
+  scale_size_continuous(range = c(2, 10), name = "Population (M)") +
+  
+  labs(
+    title    = "City CO2 Concentration vs Emissions",
+    subtitle = "Quadrants based on IQR thresholds | Size = population | Shape = coastal/inland",
+    x        = "CO2 Emissions (IQR normalized)",
+    y        = "CO2 Concentration (IQR normalized)",
+    color    = "Quadrant",
+    shape    = NULL
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+```
+
+Impact score by quadrant, color differentiated by coastal proximity. Coastal cities cluster differently across the CO2 emissions - CO2 concentration quadrants
+
+```{r}
+ggplot(norm_df, aes(x = reorder(quadrant, impact_iqr, median), 
+                     y = impact_iqr)) +
+  geom_boxplot(outlier.shape = NA, fill = "gray90") +
+  geom_jitter(aes(color = coastal_km, size = population / 1e6),
+              width = 0.2, alpha = 0.8) +
+  scale_color_viridis_c(
+    name   = "Distance to\ncoast (km)",
+    option = "plasma"
+  ) +
+  scale_size_continuous(range = c(2, 6), name = "Population (M)") +
+  labs(
+    title    = "Impact Score Distribution by Quadrant",
+    subtitle = "Color = coastal distance | Size = population",
+    x        = NULL,
+    y        = "Impact Score (IQR normalized)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 20, hjust = 1))
+```
+
+Regression analysis shows that coastal distance and population are key drivers.
+
+```{r}
+library(tidyverse)
+library(broom)
+
+# tidy regression output
+coef_df <- tidy(lm_iqr_impact, conf.int = TRUE) |>
+  filter(term != "(Intercept)") |>
+  mutate(term = recode(term,
+    "sif_iqr"         = "SIF",
+    "pop_iqr"         = "Population",
+    "xco2numsams_iqr" = "CO2 Sample Size",
+    "sifnumsams_iqr"  = "SIF Sample Size",
+    "gdp_iqr"         = "GDP",
+    "coast_iqr"       = "Coastal Distance"
+  ))
+
+ggplot(coef_df, aes(x = estimate, y = reorder(term, estimate))) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray50") +
+  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high), height = 0.2) +
+  geom_point(aes(color = p.value < 0.20), size = 3) +
+  scale_color_manual(
+    values = c("FALSE" = "gray70", "TRUE" = "steelblue"),
+    labels = c("p > 0.20", "p < 0.20")
+  ) +
+  labs(
+    title = "Predictors of CO2 Impact Score",
+    subtitle = "Impact score = normalized CO2 concentration − normalized emissions",
+    x = "Coefficient estimate (IQR normalized)",
+    y = NULL,
+    color = NULL
+  ) +
+  theme_minimal()
+```
+
+The coastal effect is most visible in cities with low CO2 emissions and high CO2 concentrations. Coastal proximity may partially explain why these cities end up receiving more CO2 despite emitting low amounts.
+
+```{r}
+ggplot(norm_df, aes(x = coastal_km, y = impact_iqr)) +
+  geom_point(aes(color = quadrant, size = population / 1e6), alpha = 0.8) +
+  geom_smooth(method = "lm", se = TRUE, color = "gray30", linewidth = 0.7) +
+  scale_color_manual(values = c(
+    "HIGH_both"               = "#d73027",
+    "LOW_both"                = "#4575b4",
+    "HIGH_emissions_LOW_conc" = "#fc8d59",
+    "LOW_emissions_HIGH_conc" = "#91bfdb"
+  )) +
+  scale_size_continuous(range = c(2, 8), name = "Population (M)") +
+  facet_wrap(~quadrant, scales = "free_y") +
+  labs(
+    title    = "Coastal Distance vs Impact Score by Quadrant",
+    x        = "Distance to coast (km)",
+    y        = "Impact Score (IQR normalized)",
+    color    = "Quadrant"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
