@@ -3,7 +3,7 @@
 # install.packages("tidyverse")
 library(tidyverse)
 
-df <- read.csv("c40cities-co2-em-conc.csv")
+df <- read.csv("c40cities-co2-em-conc.csv") # outcome of https://github.com/heytian/d2d-oco3-tools/blob/main/20260404_03_merge-co2-em-conc.py
 df <- df |> drop_na(population)
 
 # normalize independent variables using min-max / interquartile range 
@@ -34,7 +34,8 @@ norm_df <- df |>
     co2_em_iqr     = iqr_norm(annual_co2_em_mtco2),
     sif_iqr        = iqr_norm(sif_757nm),
     pop_iqr = iqr_norm(population),
-    numsample_iqr  = iqr_norm(number_of_sams),
+    xco2numsams_iqr  = iqr_norm(xco2_numsams),
+    sifnumsams_iqr  = iqr_norm(sif_numsams),
     gdp_iqr        = iqr_norm(gdp_bil_usd),
     impact_iqr     = co2_conc_iqr - co2_em_iqr
   )
@@ -51,7 +52,7 @@ norm_df <- df |>
 #                   data = norm_df)
 # summary(lm_mm_impact)
 
-lm_iqr_impact<- lm(impact_iqr ~ sif_iqr + pop_iqr + numsample_iqr + gdp_iqr, 
+lm_iqr_impact<- lm(impact_iqr ~ sif_iqr + pop_iqr + xco2numsams_iqr + sifnumsams_iqr + gdp_iqr, 
                   data = norm_df)
 summary(lm_iqr_impact)
 
