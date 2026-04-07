@@ -24,7 +24,9 @@ abstract: >
 -   Inverse relationship between CO2 and SIF - hypothesis about SIF's impact on CO2? Nature-based solutions
 
 ```{=html}
-<iframe src="http://localhost:8052" height="700" width="100%" style="border:none; pointer-events: none;"></iframe>
+<iframe src="http://localhost:8052" height="700" width="100%"></iframe>
+
+<!--<iframe src="http://localhost:8052" height="700" width="100%" style="border:none; pointer-events: none;"></iframe>-->-->
 ```
 
 ## Visual Prototype Overview (Figma)
