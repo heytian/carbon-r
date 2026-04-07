@@ -84,12 +84,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#section" id="toc-section" class="nav-link active" data-scroll-target="#section"></a></li>
+  <li><a href="#grid-pixel-heatmap-demo-dash-plotly" id="toc-grid-pixel-heatmap-demo-dash-plotly" class="nav-link active" data-scroll-target="#grid-pixel-heatmap-demo-dash-plotly">Grid pixel heatmap demo (dash plotly)</a></li>
   <li><a href="#visual-prototype-overview-figma" id="toc-visual-prototype-overview-figma" class="nav-link" data-scroll-target="#visual-prototype-overview-figma">Visual Prototype Overview (Figma)</a></li>
+  <li><a href="#visual-prototype-demo-js" id="toc-visual-prototype-demo-js" class="nav-link" data-scroll-target="#visual-prototype-demo-js">Visual prototype demo (js)</a></li>
   <li><a href="#regression-analysis" id="toc-regression-analysis" class="nav-link" data-scroll-target="#regression-analysis">Regression analysis</a></li>
   <li><a href="#plots" id="toc-plots" class="nav-link" data-scroll-target="#plots">Plots</a></li>
-  <li><a href="#visual-prototype-demo-js" id="toc-visual-prototype-demo-js" class="nav-link" data-scroll-target="#visual-prototype-demo-js">Visual prototype demo (js)</a></li>
-  <li><a href="#grid-pixel-heatmap-demo-dash-plotly" id="toc-grid-pixel-heatmap-demo-dash-plotly" class="nav-link" data-scroll-target="#grid-pixel-heatmap-demo-dash-plotly">Grid pixel heatmap demo (dash plotly)</a></li>
+  <li><a href="#further-work" id="toc-further-work" class="nav-link" data-scroll-target="#further-work">Further work</a></li>
   </ul>
 </nav>
 </div>
@@ -132,16 +132,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="section" class="level2">
-<h2 class="anchored" data-anchor-id="section"></h2>
+<section id="grid-pixel-heatmap-demo-dash-plotly" class="level2">
+<h2 class="anchored" data-anchor-id="grid-pixel-heatmap-demo-dash-plotly">Grid pixel heatmap demo (dash plotly)</h2>
+<ul>
+<li><p>Data exploration to identify trends; shows spatial-temporal spread of data, data gaps, and allows for more detailed sorting</p></li>
+<li><p>Inverse relationship between CO2 and SIF - hypothesis about SIF’s impact on CO2? Nature-based solutions</p></li>
+</ul>
+<iframe src="http://localhost:8052" height="700" width="100%" style="border:none; pointer-events: none;"></iframe>
 </section>
 <section id="visual-prototype-overview-figma" class="level2">
 <h2 class="anchored" data-anchor-id="visual-prototype-overview-figma">Visual Prototype Overview (Figma)</h2>
+<ul>
+<li>Building a tool to go from location-based selection of points of interest to comparing variables relevant to CO2</li>
+</ul>
 <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="100%" height="700" src="https://embed.figma.com/proto/nOUZp57ZbuHiR0M840E261/OCO3?node-id=553-4205&amp;p=f&amp;scaling=contain&amp;content-scaling=fixed&amp;page-id=0%3A1&amp;starting-point-node-id=553%3A4205&amp;show-proto-sidebar=1&amp;embed-host=share" allowfullscreen=""></iframe>
+</section>
+<section id="visual-prototype-demo-js" class="level2">
+<h2 class="anchored" data-anchor-id="visual-prototype-demo-js">Visual prototype demo (js)</h2>
+<ul>
+<li>Demo of some of the Figma prototype functionalities using real data; WIP.</li>
+</ul>
+<iframe src="globe/index.html" width="100%" height="900px" style="border:none;"></iframe>
 </section>
 <section id="regression-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="regression-analysis">Regression analysis</h2>
-<p>A ‘carbon impact score’ is introduced by taking the normalized interquartile range of CO2 concentration levels (OCO-3 netcdf data) subtracted by CO2 emissions levels (satellite-based estimates from Ahn et al, 2025). This is then compared against solar induced fluorescence (SIF), population, gdp, number of samples, and coastal proximity via running a multivariate linear regression.</p>
+<p>Carbon impact score (CO2 conc - CO2 emissions)</p>
+<ul>
+<li><p>A ‘carbon impact score’ is introduced by taking the normalized interquartile range of CO2 concentration levels (OCO-3 netcdf data) subtracted by CO2 emissions levels (satellite-based estimates from Ahn et al, 2025).</p></li>
+<li><p>Higher score = more “harmed” (high conc low emissions), lower score = more “harming” done (low conc high emissions)</p></li>
+<li><p>This is then compared against solar induced fluorescence (SIF), population, gdp, number of samples, and coastal proximity via running a multivariate linear regression.</p></li>
+</ul>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -373,19 +393,27 @@ F-statistic: 1.292 on 6 and 46 DF,  p-value: 0.2797</code></pre>
 </div>
 </div>
 </section>
-<section id="visual-prototype-demo-js" class="level2">
-<h2 class="anchored" data-anchor-id="visual-prototype-demo-js">Visual prototype demo (js)</h2>
-<iframe src="globe/index.html" width="100%" height="900px" style="border:none;"></iframe>
-</section>
-<section id="grid-pixel-heatmap-demo-dash-plotly" class="level2">
-<h2 class="anchored" data-anchor-id="grid-pixel-heatmap-demo-dash-plotly">Grid pixel heatmap demo (dash plotly)</h2>
-<iframe src="http://localhost:8052" height="700" width="100%" pointer-events:="" none="">
-
+<section id="further-work" class="level2">
+<h2 class="anchored" data-anchor-id="further-work">Further work</h2>
+<ul>
+<li><p>Introduce temporal element to 53-cities analysis: add in time stamps, look at seasonality/ climate zone as another independent variable</p></li>
+<li><p>Extend regression analysis from 53 to 320 cities</p>
+<ul>
+<li><p>CO2 conc &amp; sif</p></li>
+<li><p>Feasibility of extending other variables to 320 cities:</p>
+<ul>
+<li><p>coastal proximity through join by nearest</p></li>
+<li><p>GDP through pro-rated population calc</p></li>
+<li><p>CO2 emissions from processing ODIAC/EDGAR (challenging due to uncertainty and data quality)</p></li>
+</ul></li>
+</ul></li>
+<li><p>Ways to measure CO2 differently as a dependent variable e.g.&nbsp;rate of change</p></li>
+</ul>
 </section>
 
 </main>
 <!-- /main column -->
-<script id = "quarto-html-after-body" type="application/javascript">
+<script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
     const anchorJS = new window.AnchorJS();
@@ -787,7 +815,7 @@ F-statistic: 1.292 on 6 and 46 DF,  p-value: 0.2797</code></pre>
   </script>
 </div> <!-- /content -->
 
-</body>
 
-</html>
-</iframe></section></main></div></body></html>
+
+
+</body></html>

@@ -17,17 +17,41 @@ abstract: >
   A study of 53 C40 cities, as part of "Speculative Carbon Futures Amidst Climate Data Inequities (working title)"
 ---
 
-## 
+## Grid pixel heatmap demo (dash plotly)
+
+-   Data exploration to identify trends; shows spatial-temporal spread of data, data gaps, and allows for more detailed sorting
+
+-   Inverse relationship between CO2 and SIF - hypothesis about SIF's impact on CO2? Nature-based solutions
+
+```{=html}
+<iframe src="http://localhost:8052" height="700" width="100%" style="border:none; pointer-events: none;"></iframe>
+```
 
 ## Visual Prototype Overview (Figma)
+
+-   Building a tool to go from location-based selection of points of interest to comparing variables relevant to CO2
 
 ```{=html}
 <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="100%" height="700" src="https://embed.figma.com/proto/nOUZp57ZbuHiR0M840E261/OCO3?node-id=553-4205&p=f&scaling=contain&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=553%3A4205&show-proto-sidebar=1&embed-host=share" allowfullscreen></iframe>
 ```
 
+## Visual prototype demo (js)
+
+-   Demo of some of the Figma prototype functionalities using real data; WIP.
+
+```{=html}
+<iframe src="globe/index.html" width="100%" height="900px" style="border:none;"></iframe>
+```
+
 ## Regression analysis
 
-A 'carbon impact score' is introduced by taking the normalized interquartile range of CO2 concentration levels (OCO-3 netcdf data) subtracted by CO2 emissions levels (satellite-based estimates from Ahn et al, 2025). This is then compared against solar induced fluorescence (SIF), population, gdp, number of samples, and coastal proximity via running a multivariate linear regression.
+Carbon impact score (CO2 conc - CO2 emissions)
+
+-   A 'carbon impact score' is introduced by taking the normalized interquartile range of CO2 concentration levels (OCO-3 netcdf data) subtracted by CO2 emissions levels (satellite-based estimates from Ahn et al, 2025).
+
+-   Higher score = more "harmed" (high conc low emissions), lower score = more "harming" done (low conc high emissions)
+
+-   This is then compared against solar induced fluorescence (SIF), population, gdp, number of samples, and coastal proximity via running a multivariate linear regression.
 
 ```{r}
 # reference: https://towardsdatascience.com/7-steps-to-run-a-linear-regression-analysis-using-r-d5897a66b835/
@@ -200,17 +224,20 @@ ggplot(norm_df, aes(x = coastal_km, y = impact_iqr)) +
   theme(legend.position = "bottom")
 ```
 
-## Visual prototype demo (js)
+## Further work
 
-```{=html}
-<iframe src="globe/index.html" width="100%" height="900px" style="border:none;"></iframe>
-```
+-   Introduce temporal element to 53-cities analysis: add in time stamps, look at seasonality/ climate zone as another independent variable
 
-## Grid pixel heatmap demo (dash plotly)
+-   Extend regression analysis from 53 to 320 cities
 
-```{=html}
-<iframe src="http://localhost:8052" height="700" width="100%" pointer-events: none/>
-```
+    -   CO2 conc & sif
 
-```{=html}
-```
+    -   Feasibility of extending other variables to 320 cities:
+
+        -   coastal proximity through join by nearest
+
+        -   GDP through pro-rated population calc
+
+        -   CO2 emissions from processing ODIAC/EDGAR (challenging due to uncertainty and data quality)
+
+-   Ways to measure CO2 differently as a dependent variable e.g. rate of change
