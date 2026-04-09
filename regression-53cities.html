@@ -87,8 +87,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#grid-pixel-heatmap-demo-dash-plotly" id="toc-grid-pixel-heatmap-demo-dash-plotly" class="nav-link active" data-scroll-target="#grid-pixel-heatmap-demo-dash-plotly">Grid pixel heatmap demo (dash plotly)</a></li>
   <li><a href="#visual-prototype-overview-figma" id="toc-visual-prototype-overview-figma" class="nav-link" data-scroll-target="#visual-prototype-overview-figma">Visual Prototype Overview (Figma)</a></li>
   <li><a href="#visual-prototype-demo-js" id="toc-visual-prototype-demo-js" class="nav-link" data-scroll-target="#visual-prototype-demo-js">Visual prototype demo (js)</a></li>
-  <li><a href="#regression-analysis" id="toc-regression-analysis" class="nav-link" data-scroll-target="#regression-analysis">Regression analysis</a></li>
+  <li><a href="#regression-analysis-53-cities" id="toc-regression-analysis-53-cities" class="nav-link" data-scroll-target="#regression-analysis-53-cities">Regression analysis (53 cities)</a></li>
   <li><a href="#plots" id="toc-plots" class="nav-link" data-scroll-target="#plots">Plots</a></li>
+  <li><a href="#regression-analysis-357-locations" id="toc-regression-analysis-357-locations" class="nav-link" data-scroll-target="#regression-analysis-357-locations">Regression analysis (357 locations)</a></li>
   <li><a href="#further-work" id="toc-further-work" class="nav-link" data-scroll-target="#further-work">Further work</a></li>
   </ul>
 </nav>
@@ -156,8 +157,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <iframe src="globe/index.html" width="100%" height="900px" style="border:none;"></iframe>
 </section>
-<section id="regression-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="regression-analysis">Regression analysis</h2>
+<section id="regression-analysis-53-cities" class="level2">
+<h2 class="anchored" data-anchor-id="regression-analysis-53-cities">Regression analysis (53 cities)</h2>
 <p>Carbon impact score (CO2 conc - CO2 emissions)</p>
 <ul>
 <li><p>A ‘carbon impact score’ is introduced by taking the normalized interquartile range of CO2 concentration levels (OCO-3 netcdf data) subtracted by CO2 emissions levels (satellite-based estimates from Ahn et al, 2025).</p></li>
@@ -392,6 +393,273 @@ F-statistic: 1.292 on 6 and 46 DF,  p-value: 0.2797</code></pre>
 <p><img src="regression-53cities_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
+</div>
+</div>
+</section>
+<section id="regression-analysis-357-locations" class="level2">
+<h2 class="anchored" data-anchor-id="regression-analysis-357-locations">Regression analysis (357 locations)</h2>
+<p>WIP (Apr 8)</p>
+<p>Compare parquet files with location csv to check for SAM target coverage:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(arrow)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>locations <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"clasp_report_356sams-pop-gdp-coast.csv"</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># replace parquet paths with local paths</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>oco3co2 <span class="ot">&lt;-</span> <span class="fu">read_parquet</span>(<span class="st">"/Users/heyutian/Downloads/oco3_parquet/co2_sam.parquet"</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>oco3sif <span class="ot">&lt;-</span> <span class="fu">read_parquet</span>(<span class="st">"/Users/heyutian/Downloads/oco3_parquet/sif_sam.parquet"</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>oco3co2sif <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(oco3co2, oco3sif)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># diagnostic: check for overlaps between target names in the 2 files</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>target_name_csv <span class="ot">&lt;-</span> <span class="fu">unique</span>(locations<span class="sc">$</span>Target.Name)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>target_name_parquet <span class="ot">&lt;-</span> <span class="fu">unique</span>(oco3co2sif<span class="sc">$</span>target_name)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>missing_in_csv <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(target_name_parquet, target_name_csv)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>missing_in_parquet <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(target_name_csv, target_name_parquet)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Parquet entries NOT in CSV:</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Parquet entries NOT in CSV:</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(missing_in_csv)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>character(0)</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">CSV entries NOT in parquet:</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+CSV entries NOT in parquet:</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(missing_in_parquet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "ecostress_afln"          "ecostress_ca_pr_emss"   
+ [3] "ecostress_efgf"          "ecostress_npbb"         
+ [5] "fossil_Berlin_Germany"   "fossil_Birmingham_UK"   
+ [7] "fossil_Hamburg_Germany"  "fossil_Omsk_Russia"     
+ [9] "fossil_Kuybyskev_Russia" "fossil_Lepetsk_Russia"  </code></pre>
+</div>
+</div>
+<p>Check variables in both files</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(locations)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Target.ID"                      "Target.Name"                   
+ [3] "Priority.Number"                "High.Priority.Start.Date"      
+ [5] "High.Priority.End.Date"         "Site.Center.WKT"               
+ [7] "Site.Shape.WKT"                 "Number.of.Desired.Observations"
+ [9] "Mode"                           "Swath.Scale"                   
+[11] "Scan.Direction"                 "Glint.Check"                   
+[13] "Rotate.Target"                  "Ascending.Centroid.WKT"        
+[15] "Ascending.Polygon.WKT"          "Ascending.Along"               
+[17] "Ascending.Across"               "Descending.Centroid.WKT"       
+[19] "Descending.Polygon.WKT"         "Descending.Along"              
+[21] "Descending.Across"              "lon"                           
+[23] "lat"                            "city"                          
+[25] "country"                        "population"                    
+[27] "Edit.notes"                     "Unnamed..27"                   
+[29] "countrycode"                    "gdp_per_capita_country_2024"   
+[31] "gdp_bil_usd"                    "coastal_km"                    
+[33] "is_coastal"                    </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(oco3co2sif)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "xco2"            "source_file"     "target_name"     "datetime"       
+ [5] "local_time"      "latitude"        "longitude"       "city"           
+ [9] "country"         "population"      "Daily_SIF_757nm"</code></pre>
+</div>
+</div>
+<p>Merge/ analyze</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>locations_select <span class="ot">&lt;-</span> locations <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">target_name =</span> <span class="st">"Target.Name"</span>,  </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">wkt_center=</span><span class="st">"Site.Center.WKT"</span>,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">wkt_shape=</span><span class="st">"Site.Shape.WKT"</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    city,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    country,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    population,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    gdp_bil_usd,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    coastal_km,</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    is_coastal</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>oco3_full <span class="ot">&lt;-</span> oco3co2sif <span class="sc">|&gt;</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">any_of</span>(<span class="fu">c</span>(<span class="st">"city"</span>,<span class="st">"country"</span>,<span class="st">"population"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(locations_select, <span class="at">by =</span> <span class="st">"target_name"</span>)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">colnames</span>(oco3_full))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "xco2"            "source_file"     "target_name"     "datetime"       
+ [5] "local_time"      "latitude"        "longitude"       "Daily_SIF_757nm"
+ [9] "wkt_center"      "wkt_shape"       "city"            "country"        
+[13] "population"      "gdp_bil_usd"     "coastal_km"      "is_coastal"     </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(oco3_full<span class="sc">$</span>country)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 18481905</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>oco3_full <span class="ot">&lt;-</span> oco3_full <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">datetime =</span> <span class="fu">as.POSIXct</span>(datetime),</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">year</span>(datetime),</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">month =</span> <span class="fu">month</span>(datetime),</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">day_of_year =</span> <span class="fu">yday</span>(datetime),</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">season =</span> <span class="fu">case_when</span>(</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>      latitude <span class="sc">&gt;=</span> <span class="sc">-</span><span class="dv">20</span> <span class="sc">&amp;</span> latitude <span class="sc">&lt;=</span> <span class="dv">20</span> <span class="sc">&amp;</span> month <span class="sc">&gt;=</span> <span class="dv">5</span> <span class="sc">&amp;</span> month <span class="sc">&lt;=</span> <span class="dv">10</span> <span class="sc">~</span> <span class="st">"Tropical Wet"</span>,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>      latitude <span class="sc">&gt;=</span> <span class="sc">-</span><span class="dv">20</span> <span class="sc">&amp;</span> latitude <span class="sc">&lt;=</span> <span class="dv">20</span> <span class="sc">~</span> <span class="st">"Tropical Dry"</span>,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>      latitude <span class="sc">&gt;</span> <span class="dv">20</span> <span class="sc">&amp;</span> latitude <span class="sc">&lt;=</span> <span class="dv">60</span> <span class="sc">&amp;</span> month <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">1</span>, <span class="dv">2</span>) <span class="sc">~</span> <span class="st">"Winter (North)"</span>,</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>      latitude <span class="sc">&gt;</span> <span class="dv">20</span> <span class="sc">&amp;</span> latitude <span class="sc">&lt;=</span> <span class="dv">60</span> <span class="sc">&amp;</span> month <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>) <span class="sc">~</span> <span class="st">"Spring (North)"</span>,</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>      latitude <span class="sc">&gt;</span> <span class="dv">20</span> <span class="sc">&amp;</span> latitude <span class="sc">&lt;=</span> <span class="dv">60</span> <span class="sc">&amp;</span> month <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>) <span class="sc">~</span> <span class="st">"Summer (North)"</span>,</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>      latitude <span class="sc">&gt;</span> <span class="dv">20</span> <span class="sc">&amp;</span> latitude <span class="sc">&lt;=</span> <span class="dv">60</span> <span class="sc">&amp;</span> month <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>) <span class="sc">~</span> <span class="st">"Autumn (North)"</span>,</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>      latitude <span class="sc">&gt;=</span> <span class="sc">-</span><span class="dv">60</span> <span class="sc">&amp;</span> latitude <span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">20</span> <span class="sc">&amp;</span> month <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">1</span>, <span class="dv">2</span>) <span class="sc">~</span> <span class="st">"Summer (South)"</span>,</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>      latitude <span class="sc">&gt;=</span> <span class="sc">-</span><span class="dv">60</span> <span class="sc">&amp;</span> latitude <span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">20</span> <span class="sc">&amp;</span> month <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>) <span class="sc">~</span> <span class="st">"Autumn (South)"</span>,</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>      latitude <span class="sc">&gt;=</span> <span class="sc">-</span><span class="dv">60</span> <span class="sc">&amp;</span> latitude <span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">20</span> <span class="sc">&amp;</span> month <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>) <span class="sc">~</span> <span class="st">"Winter (South)"</span>,</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>      latitude <span class="sc">&gt;=</span> <span class="sc">-</span><span class="dv">60</span> <span class="sc">&amp;</span> latitude <span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">20</span> <span class="sc">&amp;</span> month <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>) <span class="sc">~</span> <span class="st">"Spring (South)"</span>,</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Other"</span></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">hour =</span> <span class="fu">hour</span>(local_time),</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">time_of_day =</span> <span class="fu">case_when</span>(</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>      hour <span class="sc">&lt;</span> <span class="dv">6</span>  <span class="sc">~</span> <span class="st">"Night"</span>,</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>      hour <span class="sc">&lt;</span> <span class="dv">12</span> <span class="sc">~</span> <span class="st">"Morning"</span>,</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>      hour <span class="sc">&lt;</span> <span class="dv">18</span> <span class="sc">~</span> <span class="st">"Afternoon"</span>,</span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Evening"</span></span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> oco3_full <span class="sc">|&gt;</span></span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>    season <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Tropical Wet"</span>, <span class="st">"Summer (North)"</span>),</span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>    time_of_day <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Morning"</span>, <span class="st">"Afternoon"</span>),</span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">is.na</span>(population),</span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>iqr_norm <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>  q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>  q3 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x, <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>  (x <span class="sc">-</span> q1) <span class="sc">/</span> (q3 <span class="sc">-</span> q1)</span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a>regression_df <span class="ot">&lt;-</span> filtered_data <span class="sc">|&gt;</span></span>
+<span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(target_name, country, population, gdp_bil_usd, coastal_km, season, time_of_day) <span class="sc">|&gt;</span></span>
+<span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb23-48"><a href="#cb23-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">country =</span> <span class="fu">first</span>(country),</span>
+<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">population =</span> <span class="fu">first</span>(population),</span>
+<span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">gdp_bil_usd =</span> <span class="fu">first</span>(gdp_bil_usd),</span>
+<span id="cb23-51"><a href="#cb23-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">coastal_km =</span> <span class="fu">first</span>(coastal_km),</span>
+<span id="cb23-52"><a href="#cb23-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">xco2_median =</span> <span class="fu">median</span>(xco2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb23-53"><a href="#cb23-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">xco2_std =</span> <span class="fu">sd</span>(xco2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb23-54"><a href="#cb23-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">xco2_n =</span> <span class="fu">n</span>(),</span>
+<span id="cb23-55"><a href="#cb23-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">sif_median =</span> <span class="fu">median</span>(Daily_SIF_757nm, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb23-56"><a href="#cb23-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">sif_std =</span> <span class="fu">sd</span>(Daily_SIF_757nm, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb23-57"><a href="#cb23-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">sif_n =</span> <span class="fu">n</span>(),</span>
+<span id="cb23-58"><a href="#cb23-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb23-59"><a href="#cb23-59" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb23-60"><a href="#cb23-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(population)) <span class="sc">|&gt;</span></span>
+<span id="cb23-61"><a href="#cb23-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb23-62"><a href="#cb23-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">xco2_iqr =</span> <span class="fu">iqr_norm</span>(xco2_median),</span>
+<span id="cb23-63"><a href="#cb23-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">sif_iqr =</span> <span class="fu">iqr_norm</span>(sif_median),</span>
+<span id="cb23-64"><a href="#cb23-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">pop_iqr =</span> <span class="fu">iqr_norm</span>(population),</span>
+<span id="cb23-65"><a href="#cb23-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">xco2_numsams_iqr =</span> <span class="fu">iqr_norm</span>(xco2_n),</span>
+<span id="cb23-66"><a href="#cb23-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">sif_numsams_iqr =</span> <span class="fu">iqr_norm</span>(sif_n),</span>
+<span id="cb23-67"><a href="#cb23-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">gdp_iqr =</span> <span class="fu">iqr_norm</span>(gdp_bil_usd),</span>
+<span id="cb23-68"><a href="#cb23-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">coast_iqr =</span> <span class="fu">iqr_norm</span>(coastal_km),</span>
+<span id="cb23-69"><a href="#cb23-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">season =</span> <span class="fu">as.factor</span>(season),</span>
+<span id="cb23-70"><a href="#cb23-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">time_of_day =</span> <span class="fu">as.factor</span>(time_of_day)</span>
+<span id="cb23-71"><a href="#cb23-71" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>model_with_season <span class="ot">&lt;-</span> <span class="fu">lm</span>(xco2_iqr <span class="sc">~</span> sif_iqr <span class="sc">+</span> pop_iqr <span class="sc">+</span> xco2_numsams_iqr <span class="sc">+</span> sif_numsams_iqr <span class="sc">+</span> gdp_iqr <span class="sc">+</span> coast_iqr <span class="sc">+</span> season, <span class="at">data =</span> regression_df)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_with_season)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = xco2_iqr ~ sif_iqr + pop_iqr + xco2_numsams_iqr + 
+    sif_numsams_iqr + gdp_iqr + coast_iqr + season, data = regression_df)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.90236 -0.52583  0.01125  0.44987  2.07972 
+
+Coefficients: (1 not defined because of singularities)
+                    Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)         0.727339   0.060830  11.957  &lt; 2e-16 ***
+sif_iqr            -0.218125   0.049888  -4.372 1.48e-05 ***
+pop_iqr             0.038290   0.033324   1.149 0.251059    
+xco2_numsams_iqr   -0.005758   0.024024  -0.240 0.810672    
+sif_numsams_iqr           NA         NA      NA       NA    
+gdp_iqr            -0.023296   0.021752  -1.071 0.284647    
+coast_iqr          -0.127556   0.036283  -3.516 0.000476 ***
+seasonTropical Wet  0.074266   0.092507   0.803 0.422436    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.7416 on 538 degrees of freedom
+  (73 observations deleted due to missingness)
+Multiple R-squared:  0.07669,   Adjusted R-squared:  0.0664 
+F-statistic: 7.448 on 6 and 538 DF,  p-value: 1.121e-07</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model_with_season)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       (Intercept)            sif_iqr            pop_iqr   xco2_numsams_iqr 
+       0.727339404       -0.218125452        0.038290373       -0.005758021 
+   sif_numsams_iqr            gdp_iqr          coast_iqr seasonTropical Wet 
+                NA       -0.023296371       -0.127556268        0.074265697 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>model_no_season <span class="ot">&lt;-</span> <span class="fu">lm</span>(xco2_iqr <span class="sc">~</span> sif_iqr <span class="sc">+</span> pop_iqr <span class="sc">+</span> xco2_numsams_iqr <span class="sc">+</span> sif_numsams_iqr <span class="sc">+</span> gdp_iqr <span class="sc">+</span> coast_iqr, <span class="at">data =</span> regression_df)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                      </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(model_no_season, model_with_season)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: xco2_iqr ~ sif_iqr + pop_iqr + xco2_numsams_iqr + sif_numsams_iqr + 
+    gdp_iqr + coast_iqr
+Model 2: xco2_iqr ~ sif_iqr + pop_iqr + xco2_numsams_iqr + sif_numsams_iqr + 
+    gdp_iqr + coast_iqr + season
+  Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
+1    539 296.20                           
+2    538 295.85  1   0.35442 0.6445 0.4224</code></pre>
 </div>
 </div>
 </section>
