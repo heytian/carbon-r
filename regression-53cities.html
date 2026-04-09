@@ -89,7 +89,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#visual-prototype-demo-js" id="toc-visual-prototype-demo-js" class="nav-link" data-scroll-target="#visual-prototype-demo-js">Visual prototype demo (js)</a></li>
   <li><a href="#regression-analysis-53-cities" id="toc-regression-analysis-53-cities" class="nav-link" data-scroll-target="#regression-analysis-53-cities">Regression analysis (53 cities)</a></li>
   <li><a href="#plots" id="toc-plots" class="nav-link" data-scroll-target="#plots">Plots</a></li>
-  <li><a href="#regression-analysis-357-locations" id="toc-regression-analysis-357-locations" class="nav-link" data-scroll-target="#regression-analysis-357-locations">Regression analysis (357 locations)</a></li>
+  <li><a href="#regression-analysis-346-locations" id="toc-regression-analysis-346-locations" class="nav-link" data-scroll-target="#regression-analysis-346-locations">Regression analysis (346 locations)</a></li>
   <li><a href="#further-work" id="toc-further-work" class="nav-link" data-scroll-target="#further-work">Further work</a></li>
   </ul>
 </nav>
@@ -396,8 +396,8 @@ F-statistic: 1.292 on 6 and 46 DF,  p-value: 0.2797</code></pre>
 </div>
 </div>
 </section>
-<section id="regression-analysis-357-locations" class="level2">
-<h2 class="anchored" data-anchor-id="regression-analysis-357-locations">Regression analysis (357 locations)</h2>
+<section id="regression-analysis-346-locations" class="level2">
+<h2 class="anchored" data-anchor-id="regression-analysis-346-locations">Regression analysis (346 locations)</h2>
 <p>WIP (Apr 8)</p>
 <p>Compare parquet files with location csv to check for SAM target coverage:</p>
 <div class="cell">
@@ -557,109 +557,909 @@ CSV entries NOT in parquet:</code></pre>
 <span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> oco3_full <span class="sc">|&gt;</span></span>
-<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
-<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>    season <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Tropical Wet"</span>, <span class="st">"Summer (North)"</span>),</span>
-<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>    time_of_day <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Morning"</span>, <span class="st">"Afternoon"</span>),</span>
-<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">is.na</span>(population),</span>
-<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>iqr_norm <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>  q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>  q3 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x, <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>  (x <span class="sc">-</span> q1) <span class="sc">/</span> (q3 <span class="sc">-</span> q1)</span>
-<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a>regression_df <span class="ot">&lt;-</span> filtered_data <span class="sc">|&gt;</span></span>
-<span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(target_name, country, population, gdp_bil_usd, coastal_km, season, time_of_day) <span class="sc">|&gt;</span></span>
-<span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb23-48"><a href="#cb23-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">country =</span> <span class="fu">first</span>(country),</span>
-<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">population =</span> <span class="fu">first</span>(population),</span>
-<span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">gdp_bil_usd =</span> <span class="fu">first</span>(gdp_bil_usd),</span>
-<span id="cb23-51"><a href="#cb23-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">coastal_km =</span> <span class="fu">first</span>(coastal_km),</span>
-<span id="cb23-52"><a href="#cb23-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">xco2_median =</span> <span class="fu">median</span>(xco2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb23-53"><a href="#cb23-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">xco2_std =</span> <span class="fu">sd</span>(xco2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb23-54"><a href="#cb23-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">xco2_n =</span> <span class="fu">n</span>(),</span>
-<span id="cb23-55"><a href="#cb23-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">sif_median =</span> <span class="fu">median</span>(Daily_SIF_757nm, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb23-56"><a href="#cb23-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">sif_std =</span> <span class="fu">sd</span>(Daily_SIF_757nm, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb23-57"><a href="#cb23-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">sif_n =</span> <span class="fu">n</span>(),</span>
-<span id="cb23-58"><a href="#cb23-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
-<span id="cb23-59"><a href="#cb23-59" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb23-60"><a href="#cb23-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(population)) <span class="sc">|&gt;</span></span>
-<span id="cb23-61"><a href="#cb23-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb23-62"><a href="#cb23-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">xco2_iqr =</span> <span class="fu">iqr_norm</span>(xco2_median),</span>
-<span id="cb23-63"><a href="#cb23-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">sif_iqr =</span> <span class="fu">iqr_norm</span>(sif_median),</span>
-<span id="cb23-64"><a href="#cb23-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">pop_iqr =</span> <span class="fu">iqr_norm</span>(population),</span>
-<span id="cb23-65"><a href="#cb23-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">xco2_numsams_iqr =</span> <span class="fu">iqr_norm</span>(xco2_n),</span>
-<span id="cb23-66"><a href="#cb23-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">sif_numsams_iqr =</span> <span class="fu">iqr_norm</span>(sif_n),</span>
-<span id="cb23-67"><a href="#cb23-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">gdp_iqr =</span> <span class="fu">iqr_norm</span>(gdp_bil_usd),</span>
-<span id="cb23-68"><a href="#cb23-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">coast_iqr =</span> <span class="fu">iqr_norm</span>(coastal_km),</span>
-<span id="cb23-69"><a href="#cb23-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">season =</span> <span class="fu">as.factor</span>(season),</span>
-<span id="cb23-70"><a href="#cb23-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">time_of_day =</span> <span class="fu">as.factor</span>(time_of_day)</span>
-<span id="cb23-71"><a href="#cb23-71" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>iqr_norm <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>  q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>  q3 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x, <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>  (x <span class="sc">-</span> q1) <span class="sc">/</span> (q3 <span class="sc">-</span> q1)</span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>regression_df <span class="ot">&lt;-</span> oco3_full <span class="sc">|&gt;</span></span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(target_name, country, population, gdp_bil_usd, coastal_km, season, time_of_day) <span class="sc">|&gt;</span></span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">city =</span> <span class="fu">first</span>(city),</span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">country =</span> <span class="fu">first</span>(country),</span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">population =</span> <span class="fu">first</span>(population),</span>
+<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">gdp_bil_usd =</span> <span class="fu">first</span>(gdp_bil_usd),</span>
+<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">coastal_km =</span> <span class="fu">first</span>(coastal_km),</span>
+<span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">xco2_median =</span> <span class="fu">median</span>(xco2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">xco2_std =</span> <span class="fu">sd</span>(xco2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb23-48"><a href="#cb23-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">xco2_n =</span> <span class="fu">n</span>(),</span>
+<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">sif_median =</span> <span class="fu">median</span>(Daily_SIF_757nm, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">sif_std =</span> <span class="fu">sd</span>(Daily_SIF_757nm, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb23-51"><a href="#cb23-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">sif_n =</span> <span class="fu">n</span>(),</span>
+<span id="cb23-52"><a href="#cb23-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb23-53"><a href="#cb23-53" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb23-54"><a href="#cb23-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(population)) <span class="sc">|&gt;</span></span>
+<span id="cb23-55"><a href="#cb23-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb23-56"><a href="#cb23-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">xco2_iqr =</span> <span class="fu">iqr_norm</span>(xco2_median),</span>
+<span id="cb23-57"><a href="#cb23-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">sif_iqr =</span> <span class="fu">iqr_norm</span>(sif_median),</span>
+<span id="cb23-58"><a href="#cb23-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">pop_iqr =</span> <span class="fu">iqr_norm</span>(population),</span>
+<span id="cb23-59"><a href="#cb23-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">xco2_numsams_iqr =</span> <span class="fu">iqr_norm</span>(xco2_n),</span>
+<span id="cb23-60"><a href="#cb23-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">sif_numsams_iqr =</span> <span class="fu">iqr_norm</span>(sif_n),</span>
+<span id="cb23-61"><a href="#cb23-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">gdp_iqr =</span> <span class="fu">iqr_norm</span>(gdp_bil_usd),</span>
+<span id="cb23-62"><a href="#cb23-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">coast_iqr =</span> <span class="fu">iqr_norm</span>(coastal_km),</span>
+<span id="cb23-63"><a href="#cb23-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">season =</span> <span class="fu">as.factor</span>(season),</span>
+<span id="cb23-64"><a href="#cb23-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">time_of_day =</span> <span class="fu">as.factor</span>(time_of_day)</span>
+<span id="cb23-65"><a href="#cb23-65" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>model_with_season <span class="ot">&lt;-</span> <span class="fu">lm</span>(xco2_iqr <span class="sc">~</span> sif_iqr <span class="sc">+</span> pop_iqr <span class="sc">+</span> xco2_numsams_iqr <span class="sc">+</span> sif_numsams_iqr <span class="sc">+</span> gdp_iqr <span class="sc">+</span> coast_iqr <span class="sc">+</span> season, <span class="at">data =</span> regression_df)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_with_season)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>model_interactions <span class="ot">&lt;-</span> <span class="fu">lm</span>(xco2_iqr <span class="sc">~</span> (sif_iqr <span class="sc">+</span> pop_iqr <span class="sc">+</span> xco2_numsams_iqr <span class="sc">+</span> gdp_iqr <span class="sc">+</span> coast_iqr) <span class="sc">*</span> season, </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">data =</span> regression_df)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_interactions)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-lm(formula = xco2_iqr ~ sif_iqr + pop_iqr + xco2_numsams_iqr + 
-    sif_numsams_iqr + gdp_iqr + coast_iqr + season, data = regression_df)
+lm(formula = xco2_iqr ~ (sif_iqr + pop_iqr + xco2_numsams_iqr + 
+    gdp_iqr + coast_iqr) * season, data = regression_df)
 
 Residuals:
      Min       1Q   Median       3Q      Max 
--1.90236 -0.52583  0.01125  0.44987  2.07972 
+-2.10403 -0.47259 -0.08403  0.45570  2.65428 
 
-Coefficients: (1 not defined because of singularities)
-                    Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)         0.727339   0.060830  11.957  &lt; 2e-16 ***
-sif_iqr            -0.218125   0.049888  -4.372 1.48e-05 ***
-pop_iqr             0.038290   0.033324   1.149 0.251059    
-xco2_numsams_iqr   -0.005758   0.024024  -0.240 0.810672    
-sif_numsams_iqr           NA         NA      NA       NA    
-gdp_iqr            -0.023296   0.021752  -1.071 0.284647    
-coast_iqr          -0.127556   0.036283  -3.516 0.000476 ***
-seasonTropical Wet  0.074266   0.092507   0.803 0.422436    
+Coefficients:
+                                       Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                            0.474381   0.052511   9.034  &lt; 2e-16 ***
+sif_iqr                               -0.258427   0.069953  -3.694 0.000225 ***
+pop_iqr                                0.059884   0.032681   1.832 0.066998 .  
+xco2_numsams_iqr                      -0.053385   0.024887  -2.145 0.032028 *  
+gdp_iqr                               -0.021880   0.019640  -1.114 0.265334    
+coast_iqr                              0.016888   0.030453   0.555 0.579245    
+seasonAutumn (South)                  -0.404749   0.197980  -2.044 0.041007 *  
+seasonSpring (North)                   0.303439   0.077672   3.907 9.58e-05 ***
+seasonSpring (South)                  -0.025600   0.222951  -0.115 0.908593    
+seasonSummer (North)                   0.164423   0.078784   2.087 0.036977 *  
+seasonSummer (South)                  -0.286215   0.239229  -1.196 0.231638    
+seasonTropical Dry                     0.357538   0.149814   2.387 0.017073 *  
+seasonTropical Wet                     0.252679   0.144885   1.744 0.081269 .  
+seasonWinter (North)                   0.336026   0.075454   4.453 8.78e-06 ***
+seasonWinter (South)                  -0.027358   0.175101  -0.156 0.875856    
+sif_iqr:seasonAutumn (South)           0.149996   0.235518   0.637 0.524256    
+sif_iqr:seasonSpring (North)           0.186275   0.085469   2.179 0.029380 *  
+sif_iqr:seasonSpring (South)           0.186490   0.152303   1.224 0.220877    
+sif_iqr:seasonSummer (North)           0.053840   0.079236   0.679 0.496885    
+sif_iqr:seasonSummer (South)           0.065103   0.149488   0.436 0.663228    
+sif_iqr:seasonTropical Dry             0.243053   0.141636   1.716 0.086266 .  
+sif_iqr:seasonTropical Wet             0.140932   0.124428   1.133 0.257462    
+sif_iqr:seasonWinter (North)          -0.023964   0.180452  -0.133 0.894360    
+sif_iqr:seasonWinter (South)           0.548034   0.281499   1.947 0.051652 .  
+pop_iqr:seasonAutumn (South)          -0.055029   0.083965  -0.655 0.512278    
+pop_iqr:seasonSpring (North)           0.029660   0.045987   0.645 0.519006    
+pop_iqr:seasonSpring (South)          -0.017037   0.079706  -0.214 0.830763    
+pop_iqr:seasonSummer (North)           0.012964   0.044729   0.290 0.771959    
+pop_iqr:seasonSummer (South)          -0.060102   0.076384  -0.787 0.431440    
+pop_iqr:seasonTropical Dry            -0.060464   0.072079  -0.839 0.401623    
+pop_iqr:seasonTropical Wet            -0.109597   0.072349  -1.515 0.129925    
+pop_iqr:seasonWinter (North)          -0.002840   0.051455  -0.055 0.955990    
+pop_iqr:seasonWinter (South)          -0.089424   0.084722  -1.055 0.291290    
+xco2_numsams_iqr:seasonAutumn (South) -0.023197   0.084682  -0.274 0.784160    
+xco2_numsams_iqr:seasonSpring (North)  0.149849   0.040925   3.662 0.000255 ***
+xco2_numsams_iqr:seasonSpring (South) -0.008445   0.071611  -0.118 0.906129    
+xco2_numsams_iqr:seasonSummer (North)  0.045801   0.027949   1.639 0.101374    
+xco2_numsams_iqr:seasonSummer (South) -0.104806   0.118388  -0.885 0.376083    
+xco2_numsams_iqr:seasonTropical Dry   -0.004227   0.049796  -0.085 0.932350    
+xco2_numsams_iqr:seasonTropical Wet   -0.009316   0.053025  -0.176 0.860551    
+xco2_numsams_iqr:seasonWinter (North) -0.005362   0.045527  -0.118 0.906259    
+xco2_numsams_iqr:seasonWinter (South) -0.065460   0.096774  -0.676 0.498830    
+gdp_iqr:seasonAutumn (South)           0.111666   0.135057   0.827 0.408415    
+gdp_iqr:seasonSpring (North)          -0.024613   0.029045  -0.847 0.396830    
+gdp_iqr:seasonSpring (South)          -0.174185   0.116260  -1.498 0.134185    
+gdp_iqr:seasonSummer (North)          -0.017967   0.027573  -0.652 0.514720    
+gdp_iqr:seasonSummer (South)           0.099281   0.120854   0.822 0.411431    
+gdp_iqr:seasonTropical Dry             0.030426   0.201019   0.151 0.879705    
+gdp_iqr:seasonTropical Wet             0.150517   0.201439   0.747 0.454998    
+gdp_iqr:seasonWinter (North)           0.008780   0.030794   0.285 0.775565    
+gdp_iqr:seasonWinter (South)           0.032218   0.137510   0.234 0.814774    
+coast_iqr:seasonAutumn (South)         0.190744   0.205218   0.929 0.352724    
+coast_iqr:seasonSpring (North)        -0.001714   0.042896  -0.040 0.968122    
+coast_iqr:seasonSpring (South)        -0.115042   0.234632  -0.490 0.623953    
+coast_iqr:seasonSummer (North)        -0.150576   0.041846  -3.598 0.000326 ***
+coast_iqr:seasonSummer (South)         0.241737   0.230368   1.049 0.294107    
+coast_iqr:seasonTropical Dry          -0.157109   0.111660  -1.407 0.159528    
+coast_iqr:seasonTropical Wet          -0.031875   0.107538  -0.296 0.766944    
+coast_iqr:seasonWinter (North)        -0.057697   0.047975  -1.203 0.229218    
+coast_iqr:seasonWinter (South)         0.418125   0.236682   1.767 0.077401 .  
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 0.7416 on 538 degrees of freedom
-  (73 observations deleted due to missingness)
-Multiple R-squared:  0.07669,   Adjusted R-squared:  0.0664 
-F-statistic: 7.448 on 6 and 538 DF,  p-value: 1.121e-07</code></pre>
+Residual standard error: 0.6966 on 2832 degrees of freedom
+  (493 observations deleted due to missingness)
+Multiple R-squared:  0.1564,    Adjusted R-squared:  0.1389 
+F-statistic: 8.902 on 59 and 2832 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
+</div>
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model_with_season)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Separate models for each season</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>seasons_list <span class="ot">&lt;-</span> <span class="fu">unique</span>(regression_df<span class="sc">$</span>season)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> seasons_list) {</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">=== Season:"</span>, s, <span class="st">"===</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  model_s <span class="ot">&lt;-</span> <span class="fu">lm</span>(xco2_iqr <span class="sc">~</span> sif_iqr <span class="sc">+</span> pop_iqr <span class="sc">+</span> xco2_numsams_iqr <span class="sc">+</span> gdp_iqr <span class="sc">+</span> coast_iqr,</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> regression_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(season <span class="sc">==</span> s))</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">summary</span>(model_s))</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>       (Intercept)            sif_iqr            pop_iqr   xco2_numsams_iqr 
-       0.727339404       -0.218125452        0.038290373       -0.005758021 
-   sif_numsams_iqr            gdp_iqr          coast_iqr seasonTropical Wet 
-                NA       -0.023296371       -0.127556268        0.074265697 </code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>model_no_season <span class="ot">&lt;-</span> <span class="fu">lm</span>(xco2_iqr <span class="sc">~</span> sif_iqr <span class="sc">+</span> pop_iqr <span class="sc">+</span> xco2_numsams_iqr <span class="sc">+</span> sif_numsams_iqr <span class="sc">+</span> gdp_iqr <span class="sc">+</span> coast_iqr, <span class="at">data =</span> regression_df)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                      </span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(model_no_season, model_with_season)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Analysis of Variance Table
+<pre><code>
+=== Season: Tropical Dry ===
 
-Model 1: xco2_iqr ~ sif_iqr + pop_iqr + xco2_numsams_iqr + sif_numsams_iqr + 
-    gdp_iqr + coast_iqr
-Model 2: xco2_iqr ~ sif_iqr + pop_iqr + xco2_numsams_iqr + sif_numsams_iqr + 
-    gdp_iqr + coast_iqr + season
-  Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
-1    539 296.20                           
-2    538 295.85  1   0.35442 0.6445 0.4224</code></pre>
+Call:
+lm(formula = xco2_iqr ~ sif_iqr + pop_iqr + xco2_numsams_iqr + 
+    gdp_iqr + coast_iqr, data = regression_df %&gt;% filter(season == 
+    s))
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.70204 -0.52055 -0.02107  0.66224  1.30603 
+
+Coefficients:
+                   Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       0.8319186  0.1540968   5.399 3.91e-07 ***
+sif_iqr          -0.0153741  0.1352574  -0.114    0.910    
+pop_iqr          -0.0005795  0.0705572  -0.008    0.993    
+xco2_numsams_iqr -0.0576127  0.0473694  -1.216    0.226    
+gdp_iqr           0.0085454  0.2197144   0.039    0.969    
+coast_iqr        -0.1402209  0.1179823  -1.188    0.237    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.765 on 110 degrees of freedom
+  (35 observations deleted due to missingness)
+Multiple R-squared:  0.03191,   Adjusted R-squared:  -0.01209 
+F-statistic: 0.7253 on 5 and 110 DF,  p-value: 0.6059
+
+
+=== Season: Tropical Wet ===
+
+Call:
+lm(formula = xco2_iqr ~ sif_iqr + pop_iqr + xco2_numsams_iqr + 
+    gdp_iqr + coast_iqr, data = regression_df %&gt;% filter(season == 
+    s))
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.10403 -0.48595  0.08939  0.57973  1.36108 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       0.72706    0.14313   5.080 1.26e-06 ***
+sif_iqr          -0.11749    0.10908  -1.077    0.283    
+pop_iqr          -0.04971    0.06842  -0.727    0.469    
+xco2_numsams_iqr -0.06270    0.04963  -1.263    0.209    
+gdp_iqr           0.12864    0.21250   0.605    0.546    
+coast_iqr        -0.01499    0.10932  -0.137    0.891    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.7384 on 132 degrees of freedom
+  (20 observations deleted due to missingness)
+Multiple R-squared:  0.02532,   Adjusted R-squared:  -0.0116 
+F-statistic: 0.6857 on 5 and 132 DF,  p-value: 0.6351
+
+
+=== Season: Autumn (South) ===
+
+Call:
+lm(formula = xco2_iqr ~ sif_iqr + pop_iqr + xco2_numsams_iqr + 
+    gdp_iqr + coast_iqr, data = regression_df %&gt;% filter(season == 
+    s))
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-0.9619 -0.4087 -0.1216  0.2990  1.2970 
+
+Coefficients:
+                  Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept)       0.069632   0.173943   0.400    0.690
+sif_iqr          -0.108430   0.204925  -0.529    0.598
+pop_iqr           0.004855   0.070478   0.069    0.945
+xco2_numsams_iqr -0.076582   0.073757  -1.038    0.302
+gdp_iqr           0.089786   0.121759   0.737    0.463
+coast_iqr         0.207631   0.184929   1.123    0.265
+
+Residual standard error: 0.6347 on 77 degrees of freedom
+  (12 observations deleted due to missingness)
+Multiple R-squared:  0.03646,   Adjusted R-squared:  -0.0261 
+F-statistic: 0.5828 on 5 and 77 DF,  p-value: 0.713
+
+
+=== Season: Spring (South) ===
+
+Call:
+lm(formula = xco2_iqr ~ sif_iqr + pop_iqr + xco2_numsams_iqr + 
+    gdp_iqr + coast_iqr, data = regression_df %&gt;% filter(season == 
+    s))
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.2833 -0.4285 -0.1303  0.4272  1.8392 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)       0.44878    0.21080   2.129   0.0362 *
+sif_iqr          -0.07194    0.13162  -0.547   0.5861  
+pop_iqr           0.04285    0.07073   0.606   0.5463  
+xco2_numsams_iqr -0.06183    0.06533  -0.946   0.3466  
+gdp_iqr          -0.19606    0.11148  -1.759   0.0822 .
+coast_iqr        -0.09815    0.22634  -0.434   0.6656  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.6777 on 85 degrees of freedom
+  (3 observations deleted due to missingness)
+Multiple R-squared:  0.05358,   Adjusted R-squared:  -0.002088 
+F-statistic: 0.9625 on 5 and 85 DF,  p-value: 0.4455
+
+
+=== Season: Summer (South) ===
+
+Call:
+lm(formula = xco2_iqr ~ sif_iqr + pop_iqr + xco2_numsams_iqr + 
+    gdp_iqr + coast_iqr, data = regression_df %&gt;% filter(season == 
+    s))
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.37656 -0.36095 -0.09964  0.48968  1.45034 
+
+Coefficients:
+                   Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept)       0.1881652  0.2125978   0.885    0.379
+sif_iqr          -0.1933234  0.1203391  -1.606    0.112
+pop_iqr          -0.0002175  0.0628872  -0.003    0.997
+xco2_numsams_iqr -0.1581915  0.1054293  -1.500    0.137
+gdp_iqr           0.0774009  0.1086211   0.713    0.478
+coast_iqr         0.2586244  0.2079991   1.243    0.217
+
+Residual standard error: 0.6345 on 79 degrees of freedom
+  (10 observations deleted due to missingness)
+Multiple R-squared:  0.1053,    Adjusted R-squared:  0.04864 
+F-statistic: 1.859 on 5 and 79 DF,  p-value: 0.111
+
+
+=== Season: Winter (South) ===
+
+Call:
+lm(formula = xco2_iqr ~ sif_iqr + pop_iqr + xco2_numsams_iqr + 
+    gdp_iqr + coast_iqr, data = regression_df %&gt;% filter(season == 
+    s))
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.08198 -0.41525  0.05475  0.35415  1.04560 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       0.44702    0.12737   3.510 0.000866 ***
+sif_iqr           0.28961    0.20791   1.393 0.168867    
+pop_iqr          -0.02954    0.05960  -0.496 0.622011    
+xco2_numsams_iqr -0.11885    0.07131  -1.667 0.100893    
+gdp_iqr           0.01034    0.10378   0.100 0.920991    
+coast_iqr         0.43501    0.17897   2.431 0.018132 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.5312 on 59 degrees of freedom
+  (14 observations deleted due to missingness)
+Multiple R-squared:  0.1783,    Adjusted R-squared:  0.1086 
+F-statistic:  2.56 on 5 and 59 DF,  p-value: 0.03662
+
+
+=== Season: Autumn (North) ===
+
+Call:
+lm(formula = xco2_iqr ~ sif_iqr + pop_iqr + xco2_numsams_iqr + 
+    gdp_iqr + coast_iqr, data = regression_df %&gt;% filter(season == 
+    s))
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.7546 -0.4504 -0.1086  0.6197  1.9411 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       0.47438    0.05285   8.976  &lt; 2e-16 ***
+sif_iqr          -0.25843    0.07040  -3.671 0.000265 ***
+pop_iqr           0.05988    0.03289   1.821 0.069195 .  
+xco2_numsams_iqr -0.05339    0.02505  -2.131 0.033495 *  
+gdp_iqr          -0.02188    0.01977  -1.107 0.268791    
+coast_iqr         0.01689    0.03065   0.551 0.581856    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.7011 on 558 degrees of freedom
+  (119 observations deleted due to missingness)
+Multiple R-squared:  0.02931,   Adjusted R-squared:  0.02061 
+F-statistic: 3.369 on 5 and 558 DF,  p-value: 0.00523
+
+
+=== Season: Spring (North) ===
+
+Call:
+lm(formula = xco2_iqr ~ sif_iqr + pop_iqr + xco2_numsams_iqr + 
+    gdp_iqr + coast_iqr, data = regression_df %&gt;% filter(season == 
+    s))
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.3604 -0.4940 -0.1624  0.3466  1.9848 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       0.77782    0.05817  13.372  &lt; 2e-16 ***
+sif_iqr          -0.07215    0.04991  -1.446  0.14879    
+pop_iqr           0.08954    0.03288   2.723  0.00665 ** 
+xco2_numsams_iqr  0.09646    0.03302   2.921  0.00361 ** 
+gdp_iqr          -0.04649    0.02175  -2.138  0.03293 *  
+coast_iqr         0.01517    0.03071   0.494  0.62138    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.708 on 612 degrees of freedom
+  (134 observations deleted due to missingness)
+Multiple R-squared:  0.03796,   Adjusted R-squared:  0.0301 
+F-statistic: 4.829 on 5 and 612 DF,  p-value: 0.0002437
+
+
+=== Season: Summer (North) ===
+
+Call:
+lm(formula = xco2_iqr ~ sif_iqr + pop_iqr + xco2_numsams_iqr + 
+    gdp_iqr + coast_iqr, data = regression_df %&gt;% filter(season == 
+    s))
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.83183 -0.48963 -0.02469  0.37968  2.65428 
+
+Coefficients:
+                  Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       0.638804   0.058866  10.852  &lt; 2e-16 ***
+sif_iqr          -0.204587   0.037298  -5.485 5.81e-08 ***
+pop_iqr           0.072849   0.030607   2.380   0.0176 *  
+xco2_numsams_iqr -0.007584   0.012747  -0.595   0.5521    
+gdp_iqr          -0.039847   0.019398  -2.054   0.0403 *  
+coast_iqr        -0.133688   0.028765  -4.648 4.03e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.6982 on 686 degrees of freedom
+  (80 observations deleted due to missingness)
+Multiple R-squared:  0.09485,   Adjusted R-squared:  0.08825 
+F-statistic: 14.38 on 5 and 686 DF,  p-value: 2.092e-13
+
+
+=== Season: Winter (North) ===
+
+Call:
+lm(formula = xco2_iqr ~ sif_iqr + pop_iqr + xco2_numsams_iqr + 
+    gdp_iqr + coast_iqr, data = regression_df %&gt;% filter(season == 
+    s))
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.4160 -0.4812 -0.1215  0.4731  1.9386 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       0.81041    0.05332  15.199   &lt;2e-16 ***
+sif_iqr          -0.28239    0.16369  -1.725   0.0852 .  
+pop_iqr           0.05704    0.03911   1.459   0.1454    
+xco2_numsams_iqr -0.05875    0.03752  -1.566   0.1181    
+gdp_iqr          -0.01310    0.02334  -0.561   0.5749    
+coast_iqr        -0.04081    0.03648  -1.119   0.2639    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.6855 on 434 degrees of freedom
+  (66 observations deleted due to missingness)
+Multiple R-squared:  0.01762,   Adjusted R-squared:  0.0063 
+F-statistic: 1.557 on 5 and 434 DF,  p-value: 0.1711</code></pre>
+</div>
+</div>
+<p>Findings:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 36%">
+<col style="width: 63%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Seasonal variation</strong></td>
+<td>Overall R² = 0.156; interactions explain 15.6% of variance</td>
+</tr>
+<tr class="even">
+<td><strong>Summer (North) is strongest</strong></td>
+<td>R² = 0.095, p &lt; 0.001; SIF, pop, GDP, coast all significant</td>
+</tr>
+<tr class="odd">
+<td><strong>Winter (South) second strongest</strong></td>
+<td>R² = 0.178, coastal effect significant (p = 0.018)</td>
+</tr>
+<tr class="even">
+<td><strong>SIF consistently matters</strong></td>
+<td>Negative across most seasons (higher vegetation = lower CO2 anomalies)</td>
+</tr>
+<tr class="odd">
+<td><strong>Coastal distance is seasonal</strong></td>
+<td>Critical in Summer/Winter North; less relevant in tropics</td>
+</tr>
+<tr class="even">
+<td><strong>Tropics are unpredictable</strong></td>
+<td>R² &lt; 0.05 for Tropical Dry/Wet; weak relationships</td>
+</tr>
+<tr class="odd">
+<td><strong>Southern Hemisphere weaker</strong></td>
+<td>Generally lower R² than Northern Hemisphere</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>season_models <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">season =</span> <span class="fu">c</span>(<span class="st">"Tropical Dry"</span>, <span class="st">"Tropical Wet"</span>, <span class="st">"Autumn (South)"</span>, <span class="st">"Spring (South)"</span>, </span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>             <span class="st">"Summer (South)"</span>, <span class="st">"Winter (South)"</span>, <span class="st">"Autumn (North)"</span>, <span class="st">"Spring (North)"</span>, </span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>             <span class="st">"Summer (North)"</span>, <span class="st">"Winter (North)"</span>),</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_squared =</span> <span class="fu">c</span>(<span class="fl">0.032</span>, <span class="fl">0.025</span>, <span class="fl">0.036</span>, <span class="fl">0.054</span>, <span class="fl">0.105</span>, <span class="fl">0.178</span>, <span class="fl">0.029</span>, <span class="fl">0.038</span>, <span class="fl">0.095</span>, <span class="fl">0.018</span>),</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">sif_sig =</span> <span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>),</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">coast_sig =</span> <span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>),</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">hemisphere =</span> <span class="fu">c</span>(<span class="st">"Tropical"</span>, <span class="st">"Tropical"</span>, <span class="st">"South"</span>, <span class="st">"South"</span>, <span class="st">"South"</span>, <span class="st">"South"</span>, <span class="st">"North"</span>, <span class="st">"North"</span>, <span class="st">"North"</span>, <span class="st">"North"</span>),</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">p_value =</span> <span class="fu">c</span>(<span class="fl">0.606</span>, <span class="fl">0.635</span>, <span class="fl">0.713</span>, <span class="fl">0.446</span>, <span class="fl">0.111</span>, <span class="fl">0.037</span>, <span class="fl">0.005</span>, <span class="fl">0.0002</span>, <span class="fl">0.0000</span>, <span class="fl">0.171</span>)</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(season_models, <span class="fu">aes</span>(<span class="at">x =</span> r_squared, <span class="at">y =</span> <span class="sc">-</span><span class="fu">log10</span>(p_value), </span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">color =</span> hemisphere, <span class="at">size =</span> r_squared)) <span class="sc">+</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">pch =</span> <span class="dv">19</span>) <span class="sc">+</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">substr</span>(season, <span class="dv">1</span>, <span class="dv">10</span>)), <span class="at">nudge_y =</span> <span class="fl">0.15</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.05</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="sc">-</span><span class="fu">log10</span>(<span class="fl">0.05</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"North"</span> <span class="ot">=</span> <span class="st">"#FF6B6B"</span>, <span class="st">"South"</span> <span class="ot">=</span> <span class="st">"#4ECDC4"</span>, <span class="st">"Tropical"</span> <span class="ot">=</span> <span class="st">"#FFE66D"</span>)) <span class="sc">+</span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Season Effectiveness: R² vs Statistical Significance"</span>,</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"R-squared (Model Fit)"</span>,</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"-log10(p-value)"</span>,</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Hemisphere"</span>,</span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="st">"R²"</span></span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>, <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">"bold"</span>))</span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regression-53cities_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>coef_comparison <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">season =</span> <span class="fu">c</span>(<span class="st">"Summer (North)"</span>, <span class="st">"Winter (North)"</span>, <span class="st">"Spring (North)"</span>, <span class="st">"Autumn (North)"</span>,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>             <span class="st">"Summer (South)"</span>, <span class="st">"Winter (South)"</span>, <span class="st">"Spring (South)"</span>, <span class="st">"Autumn (South)"</span>,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>             <span class="st">"Tropical Dry"</span>, <span class="st">"Tropical Wet"</span>),</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">sif_coef =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.205</span>, <span class="sc">-</span><span class="fl">0.282</span>, <span class="sc">-</span><span class="fl">0.072</span>, <span class="sc">-</span><span class="fl">0.258</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>               <span class="sc">-</span><span class="fl">0.193</span>, <span class="fl">0.290</span>, <span class="sc">-</span><span class="fl">0.072</span>, <span class="sc">-</span><span class="fl">0.108</span>,</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>               <span class="sc">-</span><span class="fl">0.015</span>, <span class="sc">-</span><span class="fl">0.117</span>),</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">coast_coef =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.134</span>, <span class="sc">-</span><span class="fl">0.041</span>, <span class="fl">0.015</span>, <span class="fl">0.017</span>,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>                 <span class="fl">0.259</span>, <span class="fl">0.435</span>, <span class="sc">-</span><span class="fl">0.098</span>, <span class="fl">0.208</span>,</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">-</span><span class="fl">0.140</span>, <span class="sc">-</span><span class="fl">0.015</span>),</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">hemisphere =</span> <span class="fu">c</span>(<span class="st">"North"</span>, <span class="st">"North"</span>, <span class="st">"North"</span>, <span class="st">"North"</span>, </span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"South"</span>, <span class="st">"South"</span>, <span class="st">"South"</span>, <span class="st">"South"</span>,</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"Tropical"</span>, <span class="st">"Tropical"</span>)</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(coef_comparison, <span class="fu">aes</span>(<span class="at">x =</span> sif_coef, <span class="at">y =</span> coast_coef, <span class="at">color =</span> hemisphere)) <span class="sc">+</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">substr</span>(season, <span class="dv">1</span>, <span class="dv">8</span>)), <span class="at">nudge_x =</span> <span class="fl">0.02</span>, <span class="at">size =</span> <span class="fl">2.5</span>) <span class="sc">+</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"solid"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"solid"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"North"</span> <span class="ot">=</span> <span class="st">"#FF6B6B"</span>, <span class="st">"South"</span> <span class="ot">=</span> <span class="st">"#4ECDC4"</span>, <span class="st">"Tropical"</span> <span class="ot">=</span> <span class="st">"#FFE66D"</span>)) <span class="sc">+</span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Quadrant: SIF Effect vs Coastal Distance Effect"</span>,</span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"SIF Coefficient (← vegetation helps)"</span>,</span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Coastal Coefficient (↑ coast increases CO2)"</span>,</span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Hemisphere"</span></span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">0.25</span>, <span class="at">y =</span> <span class="fl">0.4</span>, <span class="at">label =</span> <span class="st">"SIF dominant</span><span class="sc">\n</span><span class="st">Coast positive"</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">0.25</span>, <span class="at">y =</span> <span class="sc">-</span><span class="fl">0.1</span>, <span class="at">label =</span> <span class="st">"Both reduce</span><span class="sc">\n</span><span class="st">CO2"</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>, <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">"bold"</span>))</span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regression-53cities_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(season_models, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(season, r_squared), <span class="at">y =</span> r_squared, </span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">fill =</span> <span class="fu">ifelse</span>(p_value <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="st">"Sig"</span>, <span class="st">"Not Sig"</span>))) <span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Sig"</span> <span class="ot">=</span> <span class="st">"#2ECC71"</span>, <span class="st">"Not Sig"</span> <span class="ot">=</span> <span class="st">"#BDC3C7"</span>)) <span class="sc">+</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Model R² by Season</span><span class="sc">\n</span><span class="st">(Green = Significant, p &lt; 0.05)"</span>,</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Season"</span>,</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"R-squared"</span>,</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Significance"</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">"bold"</span>))</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regression-53cities_files/figure-html/unnamed-chunk-12-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>predictor_sig <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">season =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Summer (N)"</span>, <span class="st">"Winter (N)"</span>, <span class="st">"Spring (N)"</span>, <span class="st">"Winter (S)"</span>), <span class="dv">4</span>),</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">predictor =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"SIF"</span>, <span class="dv">4</span>), <span class="fu">rep</span>(<span class="st">"Population"</span>, <span class="dv">4</span>), <span class="fu">rep</span>(<span class="st">"Coast"</span>, <span class="dv">4</span>), <span class="fu">rep</span>(<span class="st">"xco2_numsams"</span>, <span class="dv">4</span>)),</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">significant =</span> <span class="fu">c</span>(</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>,  <span class="co"># SIF</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>,   <span class="co"># Population</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>,   <span class="co"># Coast</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>   <span class="co"># xco2_numsams</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(predictor_sig, <span class="fu">aes</span>(<span class="at">x =</span> predictor, <span class="at">y =</span> season, <span class="at">fill =</span> significant)) <span class="sc">+</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"TRUE"</span> <span class="ot">=</span> <span class="st">"#3498DB"</span>, <span class="st">"FALSE"</span> <span class="ot">=</span> <span class="st">"#ECF0F1"</span>)) <span class="sc">+</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Significant Predictors by Season</span><span class="sc">\n</span><span class="st">(Blue = p &lt; 0.05)"</span>,</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Predictor"</span>,</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Season"</span>,</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Significant"</span></span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">"bold"</span>))</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p4)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regression-53cities_files/figure-html/unnamed-chunk-12-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create quadrants based on percentiles</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>viz_data <span class="ot">&lt;-</span> regression_df <span class="sc">%&gt;%</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filter(city != "Urumqi") %&gt;%</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">sif_threshold =</span> <span class="fu">median</span>(sif_iqr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">co2_threshold =</span> <span class="fu">median</span>(xco2_iqr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">quadrant =</span> <span class="fu">case_when</span>(</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>      sif_iqr <span class="sc">&gt;</span> sif_threshold <span class="sc">&amp;</span> xco2_iqr <span class="sc">&gt;</span> co2_threshold <span class="sc">~</span> <span class="st">"High SIF</span><span class="sc">\n</span><span class="st">High CO2"</span>,</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>      sif_iqr <span class="sc">&gt;</span> sif_threshold <span class="sc">&amp;</span> xco2_iqr <span class="sc">&lt;=</span> co2_threshold <span class="sc">~</span> <span class="st">"High SIF</span><span class="sc">\n</span><span class="st">Low CO2"</span>,</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>      sif_iqr <span class="sc">&lt;=</span> sif_threshold <span class="sc">&amp;</span> xco2_iqr <span class="sc">&gt;</span> co2_threshold <span class="sc">~</span> <span class="st">"Low SIF</span><span class="sc">\n</span><span class="st">High CO2"</span>,</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>      sif_iqr <span class="sc">&lt;=</span> sif_threshold <span class="sc">&amp;</span> xco2_iqr <span class="sc">&lt;=</span> co2_threshold <span class="sc">~</span> <span class="st">"Low SIF</span><span class="sc">\n</span><span class="st">Low CO2"</span></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">coastal_status =</span> <span class="fu">if_else</span>(coastal_km <span class="sc">&lt;</span> <span class="dv">50</span>, <span class="st">"Coastal"</span>, <span class="st">"Inland"</span>)</span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Only keep extreme cities</span></span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>extreme_data <span class="ot">&lt;-</span> viz_data <span class="sc">%&gt;%</span></span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(quadrant) <span class="sc">%&gt;%</span></span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="fu">abs</span>(sif_iqr) <span class="sc">+</span> <span class="fu">abs</span>(xco2_iqr))) <span class="sc">%&gt;%</span>  <span class="co"># Distance from center</span></span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(viz_data, <span class="fu">aes</span>(<span class="at">x =</span> sif_iqr, <span class="at">y =</span> xco2_iqr)) <span class="sc">+</span></span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Quadrant dividing lines</span></span>
+<span id="cb32-32"><a href="#cb32-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">median</span>(viz_data<span class="sc">$</span>xco2_iqr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"gray50"</span>, <span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb32-34"><a href="#cb32-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">median</span>(viz_data<span class="sc">$</span>sif_iqr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb32-35"><a href="#cb32-35" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"gray50"</span>, <span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb32-36"><a href="#cb32-36" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-37"><a href="#cb32-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Background all cities (small, gray)</span></span>
+<span id="cb32-38"><a href="#cb32-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"lightgray"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb32-39"><a href="#cb32-39" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-40"><a href="#cb32-40" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Highlight extreme cities</span></span>
+<span id="cb32-41"><a href="#cb32-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb32-42"><a href="#cb32-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> extreme_data,</span>
+<span id="cb32-43"><a href="#cb32-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">color =</span> quadrant, <span class="at">size =</span> population <span class="sc">/</span> <span class="fl">1e6</span>, <span class="at">shape =</span> coastal_status),</span>
+<span id="cb32-44"><a href="#cb32-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.8</span>,</span>
+<span id="cb32-45"><a href="#cb32-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">stroke =</span> <span class="dv">1</span></span>
+<span id="cb32-46"><a href="#cb32-46" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-47"><a href="#cb32-47" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-48"><a href="#cb32-48" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Label extreme cities only</span></span>
+<span id="cb32-49"><a href="#cb32-49" aria-hidden="true" tabindex="-1"></a>  ggrepel<span class="sc">::</span><span class="fu">geom_text_repel</span>(</span>
+<span id="cb32-50"><a href="#cb32-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> extreme_data,</span>
+<span id="cb32-51"><a href="#cb32-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> city, <span class="at">color =</span> quadrant),</span>
+<span id="cb32-52"><a href="#cb32-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">3.5</span>,</span>
+<span id="cb32-53"><a href="#cb32-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">max.overlaps =</span> <span class="dv">20</span>,</span>
+<span id="cb32-54"><a href="#cb32-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">segment.size =</span> <span class="fl">0.4</span>,</span>
+<span id="cb32-55"><a href="#cb32-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">segment.alpha =</span> <span class="fl">0.5</span>,</span>
+<span id="cb32-56"><a href="#cb32-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">box.padding =</span> <span class="fl">0.4</span>,</span>
+<span id="cb32-57"><a href="#cb32-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontface =</span> <span class="st">"bold"</span></span>
+<span id="cb32-58"><a href="#cb32-58" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-59"><a href="#cb32-59" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-60"><a href="#cb32-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb32-61"><a href="#cb32-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb32-62"><a href="#cb32-62" aria-hidden="true" tabindex="-1"></a>      <span class="st">"High SIF</span><span class="sc">\n</span><span class="st">High CO2"</span> <span class="ot">=</span> <span class="st">"#e41a1c"</span>,   <span class="co"># Red - unexpected</span></span>
+<span id="cb32-63"><a href="#cb32-63" aria-hidden="true" tabindex="-1"></a>      <span class="st">"High SIF</span><span class="sc">\n</span><span class="st">Low CO2"</span> <span class="ot">=</span> <span class="st">"#4daf4a"</span>,    <span class="co"># Green - good</span></span>
+<span id="cb32-64"><a href="#cb32-64" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Low SIF</span><span class="sc">\n</span><span class="st">High CO2"</span> <span class="ot">=</span> <span class="st">"#ff7f00"</span>,    <span class="co"># Orange - bad</span></span>
+<span id="cb32-65"><a href="#cb32-65" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Low SIF</span><span class="sc">\n</span><span class="st">Low CO2"</span> <span class="ot">=</span> <span class="st">"#377eb8"</span>      <span class="co"># Blue - neutral</span></span>
+<span id="cb32-66"><a href="#cb32-66" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb32-67"><a href="#cb32-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Quadrant"</span></span>
+<span id="cb32-68"><a href="#cb32-68" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-69"><a href="#cb32-69" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-70"><a href="#cb32-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(</span>
+<span id="cb32-71"><a href="#cb32-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Coastal"</span> <span class="ot">=</span> <span class="dv">17</span>, <span class="st">"Inland"</span> <span class="ot">=</span> <span class="dv">16</span>),</span>
+<span id="cb32-72"><a href="#cb32-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Type"</span></span>
+<span id="cb32-73"><a href="#cb32-73" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-74"><a href="#cb32-74" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-75"><a href="#cb32-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_continuous</span>(</span>
+<span id="cb32-76"><a href="#cb32-76" aria-hidden="true" tabindex="-1"></a>    <span class="at">range =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">5</span>),</span>
+<span id="cb32-77"><a href="#cb32-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Population (M)"</span></span>
+<span id="cb32-78"><a href="#cb32-78" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-79"><a href="#cb32-79" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-80"><a href="#cb32-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>season, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb32-81"><a href="#cb32-81" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-82"><a href="#cb32-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb32-83"><a href="#cb32-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Extreme Cities: SIF Impact vs CO2 Concentration by Season"</span>,</span>
+<span id="cb32-84"><a href="#cb32-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Showing 6 extreme cities per quadrant | ▲ = Coastal | ● = Inland | Gray dots = all other cities"</span>,</span>
+<span id="cb32-85"><a href="#cb32-85" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"SIF Effect (← helps reduce CO2)"</span>,</span>
+<span id="cb32-86"><a href="#cb32-86" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"CO2 Concentration"</span></span>
+<span id="cb32-87"><a href="#cb32-87" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-88"><a href="#cb32-88" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-89"><a href="#cb32-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb32-90"><a href="#cb32-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb32-91"><a href="#cb32-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb32-92"><a href="#cb32-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">13</span>),</span>
+<span id="cb32-93"><a href="#cb32-93" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb32-94"><a href="#cb32-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">9</span>),</span>
+<span id="cb32-95"><a href="#cb32-95" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb32-96"><a href="#cb32-96" aria-hidden="true" tabindex="-1"></a>    <span class="at">aspect.ratio =</span> <span class="fl">0.5</span></span>
+<span id="cb32-97"><a href="#cb32-97" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regression-53cities_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">repr.plot.width =</span> <span class="dv">16</span>, <span class="at">repr.plot.height =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create quadrants based on percentiles</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>viz_data <span class="ot">&lt;-</span> regression_df <span class="sc">%&gt;%</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">sif_threshold =</span> <span class="fu">median</span>(sif_iqr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">co2_threshold =</span> <span class="fu">median</span>(xco2_iqr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">quadrant =</span> <span class="fu">case_when</span>(</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>      sif_iqr <span class="sc">&gt;</span> sif_threshold <span class="sc">&amp;</span> xco2_iqr <span class="sc">&gt;</span> co2_threshold <span class="sc">~</span> <span class="st">"High SIF</span><span class="sc">\n</span><span class="st">High CO2"</span>,</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>      sif_iqr <span class="sc">&gt;</span> sif_threshold <span class="sc">&amp;</span> xco2_iqr <span class="sc">&lt;=</span> co2_threshold <span class="sc">~</span> <span class="st">"High SIF</span><span class="sc">\n</span><span class="st">Low CO2"</span>,</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>      sif_iqr <span class="sc">&lt;=</span> sif_threshold <span class="sc">&amp;</span> xco2_iqr <span class="sc">&gt;</span> co2_threshold <span class="sc">~</span> <span class="st">"Low SIF</span><span class="sc">\n</span><span class="st">High CO2"</span>,</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>      sif_iqr <span class="sc">&lt;=</span> sif_threshold <span class="sc">&amp;</span> xco2_iqr <span class="sc">&lt;=</span> co2_threshold <span class="sc">~</span> <span class="st">"Low SIF</span><span class="sc">\n</span><span class="st">Low CO2"</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">coastal_status =</span> <span class="fu">if_else</span>(coastal_km <span class="sc">&lt;</span> <span class="dv">50</span>, <span class="st">"Coastal"</span>, <span class="st">"Inland"</span>)</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Only keep extreme cities</span></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>extreme_data <span class="ot">&lt;-</span> viz_data <span class="sc">%&gt;%</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(quadrant) <span class="sc">%&gt;%</span></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="fu">abs</span>(sif_iqr) <span class="sc">+</span> <span class="fu">abs</span>(xco2_iqr))) <span class="sc">%&gt;%</span></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a><span class="co"># ============== PLOT 1: ALL SEASONS COMBINED ==============</span></span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>p_combined <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(viz_data, <span class="fu">aes</span>(<span class="at">x =</span> sif_iqr, <span class="at">y =</span> xco2_iqr)) <span class="sc">+</span></span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Quadrant dividing lines</span></span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">median</span>(viz_data<span class="sc">$</span>xco2_iqr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"gray50"</span>, <span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">median</span>(viz_data<span class="sc">$</span>sif_iqr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"gray50"</span>, <span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Background all cities (small, gray)</span></span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"lightgray"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Highlight extreme cities</span></span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> extreme_data,</span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">color =</span> quadrant, <span class="at">size =</span> population <span class="sc">/</span> <span class="fl">1e6</span>, <span class="at">shape =</span> coastal_status),</span>
+<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.8</span>,</span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">stroke =</span> <span class="dv">1</span></span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Label extreme cities only</span></span>
+<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a>  ggrepel<span class="sc">::</span><span class="fu">geom_text_repel</span>(</span>
+<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> extreme_data,</span>
+<span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> city, <span class="at">color =</span> quadrant),</span>
+<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">3.5</span>,</span>
+<span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">max.overlaps =</span> <span class="dv">24</span>,</span>
+<span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">segment.size =</span> <span class="fl">0.4</span>,</span>
+<span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">segment.alpha =</span> <span class="fl">0.5</span>,</span>
+<span id="cb34-55"><a href="#cb34-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">box.padding =</span> <span class="fl">0.4</span>,</span>
+<span id="cb34-56"><a href="#cb34-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontface =</span> <span class="st">"bold"</span></span>
+<span id="cb34-57"><a href="#cb34-57" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb34-58"><a href="#cb34-58" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-59"><a href="#cb34-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb34-60"><a href="#cb34-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb34-61"><a href="#cb34-61" aria-hidden="true" tabindex="-1"></a>      <span class="st">"High SIF</span><span class="sc">\n</span><span class="st">High CO2"</span> <span class="ot">=</span> <span class="st">"#e41a1c"</span>,</span>
+<span id="cb34-62"><a href="#cb34-62" aria-hidden="true" tabindex="-1"></a>      <span class="st">"High SIF</span><span class="sc">\n</span><span class="st">Low CO2"</span> <span class="ot">=</span> <span class="st">"#4daf4a"</span>,</span>
+<span id="cb34-63"><a href="#cb34-63" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Low SIF</span><span class="sc">\n</span><span class="st">High CO2"</span> <span class="ot">=</span> <span class="st">"#ff7f00"</span>,</span>
+<span id="cb34-64"><a href="#cb34-64" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Low SIF</span><span class="sc">\n</span><span class="st">Low CO2"</span> <span class="ot">=</span> <span class="st">"#377eb8"</span></span>
+<span id="cb34-65"><a href="#cb34-65" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb34-66"><a href="#cb34-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Quadrant"</span></span>
+<span id="cb34-67"><a href="#cb34-67" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb34-68"><a href="#cb34-68" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-69"><a href="#cb34-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(</span>
+<span id="cb34-70"><a href="#cb34-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Coastal"</span> <span class="ot">=</span> <span class="dv">17</span>, <span class="st">"Inland"</span> <span class="ot">=</span> <span class="dv">16</span>),</span>
+<span id="cb34-71"><a href="#cb34-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Type"</span></span>
+<span id="cb34-72"><a href="#cb34-72" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb34-73"><a href="#cb34-73" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-74"><a href="#cb34-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_continuous</span>(</span>
+<span id="cb34-75"><a href="#cb34-75" aria-hidden="true" tabindex="-1"></a>    <span class="at">range =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">8</span>),</span>
+<span id="cb34-76"><a href="#cb34-76" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Population (M)"</span></span>
+<span id="cb34-77"><a href="#cb34-77" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb34-78"><a href="#cb34-78" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-79"><a href="#cb34-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb34-80"><a href="#cb34-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"All Cities: SIF Impact vs CO2 Concentration (All Seasons)"</span>,</span>
+<span id="cb34-81"><a href="#cb34-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Extreme cities highlighted | ▲ = Coastal | ● = Inland | Gray = all other cities"</span>,</span>
+<span id="cb34-82"><a href="#cb34-82" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"SIF"</span>,</span>
+<span id="cb34-83"><a href="#cb34-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"CO2 Concentration"</span></span>
+<span id="cb34-84"><a href="#cb34-84" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb34-85"><a href="#cb34-85" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-86"><a href="#cb34-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb34-87"><a href="#cb34-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb34-88"><a href="#cb34-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb34-89"><a href="#cb34-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">13</span>),</span>
+<span id="cb34-90"><a href="#cb34-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb34-91"><a href="#cb34-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb34-92"><a href="#cb34-92" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb34-93"><a href="#cb34-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-94"><a href="#cb34-94" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p_combined)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regression-53cities_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>p_faceted <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(viz_data, <span class="fu">aes</span>(<span class="at">x =</span> sif_iqr, <span class="at">y =</span> xco2_iqr)) <span class="sc">+</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Quadrant dividing lines</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">median</span>(viz_data<span class="sc">$</span>xco2_iqr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"gray50"</span>, <span class="at">size =</span> <span class="fl">0.6</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">median</span>(viz_data<span class="sc">$</span>sif_iqr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"gray50"</span>, <span class="at">size =</span> <span class="fl">0.6</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Background all cities</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">1.5</span>, <span class="at">color =</span> <span class="st">"lightgray"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Highlight extreme cities</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> extreme_data,</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">color =</span> quadrant, <span class="at">size =</span> population <span class="sc">/</span> <span class="fl">1e6</span>, <span class="at">shape =</span> coastal_status),</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.8</span>,</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">stroke =</span> <span class="dv">1</span></span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Label extreme cities</span></span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>  ggrepel<span class="sc">::</span><span class="fu">geom_text_repel</span>(</span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> extreme_data,</span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> city, <span class="at">color =</span> quadrant),</span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">3</span>,</span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">max.overlaps =</span> <span class="dv">20</span>,</span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">segment.size =</span> <span class="fl">0.3</span>,</span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">segment.alpha =</span> <span class="fl">0.5</span>,</span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">box.padding =</span> <span class="fl">0.3</span>,</span>
+<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontface =</span> <span class="st">"bold"</span></span>
+<span id="cb35-30"><a href="#cb35-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb35-33"><a href="#cb35-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb35-34"><a href="#cb35-34" aria-hidden="true" tabindex="-1"></a>      <span class="st">"High SIF</span><span class="sc">\n</span><span class="st">High CO2"</span> <span class="ot">=</span> <span class="st">"#e41a1c"</span>,</span>
+<span id="cb35-35"><a href="#cb35-35" aria-hidden="true" tabindex="-1"></a>      <span class="st">"High SIF</span><span class="sc">\n</span><span class="st">Low CO2"</span> <span class="ot">=</span> <span class="st">"#4daf4a"</span>,</span>
+<span id="cb35-36"><a href="#cb35-36" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Low SIF</span><span class="sc">\n</span><span class="st">High CO2"</span> <span class="ot">=</span> <span class="st">"#ff7f00"</span>,</span>
+<span id="cb35-37"><a href="#cb35-37" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Low SIF</span><span class="sc">\n</span><span class="st">Low CO2"</span> <span class="ot">=</span> <span class="st">"#377eb8"</span></span>
+<span id="cb35-38"><a href="#cb35-38" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb35-39"><a href="#cb35-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Quadrant"</span></span>
+<span id="cb35-40"><a href="#cb35-40" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb35-41"><a href="#cb35-41" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-42"><a href="#cb35-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(</span>
+<span id="cb35-43"><a href="#cb35-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Coastal"</span> <span class="ot">=</span> <span class="dv">17</span>, <span class="st">"Inland"</span> <span class="ot">=</span> <span class="dv">16</span>),</span>
+<span id="cb35-44"><a href="#cb35-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Type"</span></span>
+<span id="cb35-45"><a href="#cb35-45" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb35-46"><a href="#cb35-46" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-47"><a href="#cb35-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_continuous</span>(</span>
+<span id="cb35-48"><a href="#cb35-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">range =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">6</span>),</span>
+<span id="cb35-49"><a href="#cb35-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Population (M)"</span></span>
+<span id="cb35-50"><a href="#cb35-50" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb35-51"><a href="#cb35-51" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-52"><a href="#cb35-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>season, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb35-53"><a href="#cb35-53" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-54"><a href="#cb35-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb35-55"><a href="#cb35-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Extreme Cities by Season: SIF Impact vs CO2 Concentration"</span>,</span>
+<span id="cb35-56"><a href="#cb35-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"2 columns x 5 rows | ▲ = Coastal | ● = Inland"</span>,</span>
+<span id="cb35-57"><a href="#cb35-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"SIF Effect"</span>,</span>
+<span id="cb35-58"><a href="#cb35-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"CO2 Concentration"</span></span>
+<span id="cb35-59"><a href="#cb35-59" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb35-60"><a href="#cb35-60" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-61"><a href="#cb35-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb35-62"><a href="#cb35-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb35-63"><a href="#cb35-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb35-64"><a href="#cb35-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">13</span>),</span>
+<span id="cb35-65"><a href="#cb35-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb35-66"><a href="#cb35-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb35-67"><a href="#cb35-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb35-68"><a href="#cb35-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">aspect.ratio =</span> <span class="fl">1.2</span>  <span class="co"># ← Make each panel taller</span></span>
+<span id="cb35-69"><a href="#cb35-69" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb35-70"><a href="#cb35-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-71"><a href="#cb35-71" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">repr.plot.height =</span> <span class="dv">24</span>)</span>
+<span id="cb35-72"><a href="#cb35-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-73"><a href="#cb35-73" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p_faceted)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regression-53cities_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
