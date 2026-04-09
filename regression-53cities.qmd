@@ -45,7 +45,7 @@ abstract: >
 <iframe src="globe/index.html" width="100%" height="900px" style="border:none;"></iframe>
 ```
 
-## Regression analysis
+## Regression analysis (53 cities)
 
 Carbon impact score (CO2 conc - CO2 emissions)
 
@@ -224,6 +224,51 @@ ggplot(norm_df, aes(x = coastal_km, y = impact_iqr)) +
   ) +
   theme_minimal() +
   theme(legend.position = "bottom")
+```
+
+## Regression analysis (357 locations)
+
+WIP (Apr 8)
+
+Compare parquet files with location csv to check for SAM target coverage:
+
+```{r}
+library(arrow)
+library(dplyr)
+locations <- read.csv("clasp_report_356sams-pop-gdp-coast.csv")
+
+# replace parquet paths with local paths
+oco3co2 <- read_parquet("/Users/heyutian/Downloads/oco3_parquet/co2_sam.parquet")
+oco3sif <- read_parquet("/Users/heyutian/Downloads/oco3_parquet/sif_sam.parquet")
+oco3co2sif <- bind_rows(oco3co2, oco3sif)
+
+# diagnostic: check for overlaps between target names in the 2 files
+target_name_csv <- unique(locations$Target.Name)
+target_name_parquet <- unique(oco3co2sif$target_name)
+missing_in_csv <- setdiff(target_name_parquet, target_name_csv)
+missing_in_parquet <- setdiff(target_name_csv, target_name_parquet)
+cat("Parquet entries NOT in CSV:\n")
+print(missing_in_csv)
+cat("\nCSV entries NOT in parquet:\n")
+print(missing_in_parquet)
+```
+
+Check variables in both files
+
+```{r}
+colnames(locations)
+colnames(oco3co2sif)
+```
+
+Merge/ analyze
+
+```{r}
+parquetplus <- oco3co2sif |>
+  left_join(locations, by = c("target_name" = "Target.Name")
+
+model <- lm(mean_var1 ~ gdp_bil_usd + population + coastal_km + is_coastal,
+            data = merged_agg)
+summary(model)
 ```
 
 ## Further work
