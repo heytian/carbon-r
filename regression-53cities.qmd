@@ -363,6 +363,10 @@ summary(model_interactions)
 ```
 
 ```{r}
+
+```
+
+```{r}
 # Separate models for each season
 seasons_list <- unique(regression_df$season)
 
@@ -387,6 +391,36 @@ Findings:
 | **Coastal distance is seasonal** | Critical in Summer/Winter North; less relevant in tropics |
 | **Tropics are unpredictable** | R² \< 0.05 for Tropical Dry/Wet; weak relationships |
 | **Southern Hemisphere weaker** | Generally lower R² than Northern Hemisphere |
+
+```{r}
+
+summary(lm(xco2_median ~ sif_median + pop_iqr + gdp_iqr + coast_iqr,
+   data = regression_df %>% filter(season == "Summer (North)")))
+```
+
+Findings:
+
+**SIF: -6.42 (p\<0.001)**\*
+Vegetation draws CO2 down strongly. Sites with suppressed SIF — urban, industrial, degraded land — carry higher atmospheric CO2.
+
+**Population: +0.44 (p=0.019)**
+Denser populations bear higher XCO2.
+
+**GDP: -0.25 (p=0.038)**
+Wealthier sites have lower XCO2 median.
+
+**Coastal: -0.83 (p\<0.001)**
+Ocean sink proximity reduces XCO2.
+
+|     |     |
+|-----|-----|
+|     |     |
+|     |     |
+|     |     |
+|     |     |
+|     |     |
+|     |     |
+|     |     |
 
 ```{r}
 library(ggplot2)
@@ -774,20 +808,48 @@ options(repr.plot.height = 24)
 print(p_faceted)
 ```
 
+## Summary
+
+-   53 locations, single temporal state (median for 2019-2023); co2 conc, co2 emissions, sif, population, gdp, coastal proximity
+
+-   346 locations, by seasons / climate zones from 2019-2023 based; co2 conc, sif, population, gdp coastal proximity
+
+## Notes (Apr 9)
+
+Contributions:
+
+-   Quadrant view in figma:
+
+    -   Step 1 'Personas' of cities at the extremities of each quadrant
+
+    -   Step 2: Adding bespoke variables to each city to consider adding to the analysis -\> localize analysis, spot patterns (regression/ pareto / tbd)
+
+        -   may not be necessary for a relationship between variables to trigger Step 3. leave to cities to decide
+
+    -   Step 3: \[Variable-to-action framework\] Introduce things that cities can do -\> Add possible policy actions to each variable (e.g. coastal proximity -\> harness wind? sif -\> nature-based solutions) -\> examples that I give
+
+-   Concentration vs emissions -\> carbon impact score
+
+    -   highlight a few cities
+
+        -   MVP: 53 cities
+
+        -   Stretch: from 346 cities if co2 emissions data can be expanded
+
+Completeness of analysis
+
+-   is there an ideal regression?
+
+Looking at the cities in a quadrant, put into a framework for potential variables to investigate further
+
 ## Further work
 
--   Introduce temporal element to 53-cities analysis: add in time stamps, look at seasonality/ climate zone as another independent variable
+-   Extend CO2 emission estimates from current 53 cities to expanded 346 locations
 
--   Extend regression analysis from 53 to 320 cities
+    -   check feasibility as data extraction and processing might be challenging due to uncertainty and data quality/ temporal resolution (ODIAC/ EDGAR)
 
-    -   CO2 conc & sif
-
-    -   Feasibility of extending other variables to 320 cities:
-
-        -   coastal proximity through join by nearest
-
-        -   GDP through pro-rated population calc
-
-        -   CO2 emissions from processing ODIAC/EDGAR (challenging due to uncertainty and data quality)
+-   Time of day as a variable (morning, afternoon)
 
 -   Ways to measure CO2 differently as a dependent variable e.g. rate of change
+
+-   Pareto-optimal
